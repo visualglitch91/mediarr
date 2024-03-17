@@ -62,7 +62,7 @@
 		return {
 			tmdbRecommendationProps: await tmdbRecommendationProps,
 			tmdbSimilarProps: await tmdbSimilarProps,
-			castProps: await castPropsPromise,	
+			castProps: await castPropsPromise
 		};
 	}
 
@@ -89,11 +89,40 @@
 			radarrId: $radarrMovieStore.item?.id
 		});
 	}
+
+	function isDownloading() {
+		const movie = $radarrMovieStore.item;
+		const downloads = $radarrDownloadStore.downloads;
+
+		if (movie && downloads) {
+			return downloads.some((it) => it.movieId === movie.id);
+		}
+
+		return false;
+	}
+
+	function getStatusLabel() {
+		const movie = $radarrMovieStore.item;
+
+		if (!movie) {
+			return null;
+		}
+
+		return !movie.monitored
+			? 'Unmonitored'
+			: movie.hasFile
+			? 'Available'
+			: isDownloading()
+			? 'Downloading'
+			: movie.status !== 'released'
+			? 'Unreleased'
+			: 'Missing';
+	}
 </script>
 
 {#await data}
 	<TitlePageLayout {isModal} {handleCloseModal} />
-{:then movie }
+{:then movie}
 	<TitlePageLayout
 		titleInformation={{
 			tmdbId,
@@ -151,8 +180,8 @@
 							<span>Add to Radarr</span><Plus size={20} />
 						</Button>
 					{:else if radarrMovie}
-						<Button type="primary" on:click={openRequestModal}>
-							<span class="mr-2">Request Movie</span><Plus size={20} />
+						<Button type="primary">
+							<span class="mr-2">{getStatusLabel()}</span>
 						</Button>
 					{/if}
 				{/if}
@@ -247,15 +276,6 @@
 						</h2>
 					</div>
 				{/if}
-
-				<div class="flex gap-4 flex-wrap col-span-4 sm:col-span-6 mt-4">
-					<Button on:click={openRequestModal}>
-						<span class="mr-2">Request Movie</span><Plus size={20} />
-					</Button>
-					<Button>
-						<span class="mr-2">Manage</span><Archive size={20} />
-					</Button>
-				</div>
 			{:else if $radarrMovieStore.loading}
 				<div class="flex gap-4 flex-wrap col-span-4 sm:col-span-6 mt-4">
 					<div class="placeholder h-10 w-40 rounded-xl" />
