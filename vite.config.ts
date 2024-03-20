@@ -1,16 +1,8 @@
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vitest/config';
-// import * as pkg from './package.json';
+import { defineConfig } from "vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+import react from "@vitejs/plugin-react";
 
+// https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [sveltekit()],
-	// define: {
-	// 	PKG: pkg
-	// },
-	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}']
-	},
-	ssr: {
-		external: ['reflect-metadata']
-	}
+  plugins: [tsconfigPaths(), react()],
 });
