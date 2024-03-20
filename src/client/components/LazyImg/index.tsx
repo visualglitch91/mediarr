@@ -5,10 +5,12 @@ export default function LazyImg({
   src,
   alt,
   className,
+  children,
 }: {
   src: string;
   alt?: string;
   className?: string;
+  children?: React.ReactNode;
 }) {
   const [loaded, setLoaded] = useState(false);
 
@@ -31,7 +33,7 @@ export default function LazyImg({
         loading="lazy"
         onLoad={() => setLoaded(true)}
       />
-      <slot />
+      {children}
     </div>
   );
 }

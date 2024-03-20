@@ -1,5 +1,8 @@
+import { navigate } from "wouter/use-location";
 import { TitleId } from "./types";
 
 export default function useTitleModal() {
-  return (_: TitleId) => {};
+  return ({ id, type }: TitleId) => {
+    navigate(`/${type}/${id}`);
+  };
 }
