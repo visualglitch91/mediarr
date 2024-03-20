@@ -7,9 +7,9 @@ export default function Slot<
   name,
   children,
 }: {
-  slots: T;
+  slots?: T;
   name: keyof T;
   children?: React.ReactNode;
 }) {
-  return slots[name] || children || null;
+  return slots?.[name] || children || null;
 }

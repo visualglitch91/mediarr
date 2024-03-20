@@ -45,9 +45,7 @@ function getRadarrApi() {
 
 export const getRadarrMovies = (): Promise<RadarrMovie[]> =>
   getRadarrApi()
-    ?.GET("/api/v3/movie", {
-      params: {},
-    })
+    ?.GET("/api/v3/movie", { params: {} })
     .then((r) => r.data || []) || Promise.resolve([]);
 
 export const getRadarrMovieByTmdbId = (

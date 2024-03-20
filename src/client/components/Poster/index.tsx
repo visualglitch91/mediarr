@@ -20,7 +20,7 @@ export default function Poster({
   rating,
   tmdbId,
   tvdbId,
-  slots = {},
+  slots,
 }: {
   openInModal?: boolean;
   type?: TitleType;

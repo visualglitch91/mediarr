@@ -26,7 +26,7 @@ export default function TitlePageLayout({
   isModal = false,
   handleCloseModal = () => {},
   titleInformation,
-  slots = {},
+  slots,
 }: {
   isModal?: boolean;
   handleCloseModal?: () => void;
@@ -118,7 +118,7 @@ export default function TitlePageLayout({
                     className="absolute top-8 right-4 sm:right-8 z-10"
                   >
                     <IconButton>
-                      <ExternalLinkIcon fontSize={20} />
+                      <ExternalLinkIcon width={20} height={20} />
                     </IconButton>
                   </a>
                 )}
@@ -127,12 +127,12 @@ export default function TitlePageLayout({
                     className="flex items-center sm:hidden font-medium"
                     onClick={handleCloseModal}
                   >
-                    <ChevronLeftIcon fontSize={20} />
+                    <ChevronLeftIcon width={20} height={20} />
                     Back
                   </button>
                   <div className="hidden sm:block">
                     <IconButton onClick={handleCloseModal}>
-                      <Cross2Icon fontSize={20} />
+                      <Cross2Icon width={20} height={20} />
                     </IconButton>
                   </div>
                 </div>

@@ -11,13 +11,15 @@ export default function QueryRenderer<T>({
   error?: React.ReactNode;
   success: (data: T) => React.ReactNode;
 }) {
+  console.log(query.data);
+
   if (query.isLoading) {
     return loading;
   }
 
-  if (query.isError || !query.data) {
+  if (query.isError) {
     return error;
   }
 
-  return success(query.data);
+  return success(query.data!);
 }

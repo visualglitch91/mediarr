@@ -15,7 +15,7 @@ export default function Carousel({
   scrollClassName = "",
   className = "",
   children,
-  slots = {},
+  slots,
 }: {
   gradientFromColor?: string;
   heading?: React.ReactNode;
@@ -57,7 +57,7 @@ export default function Carousel({
               });
             }}
           >
-            <ChevronLeftIcon fontSize={20} />
+            <ChevronLeftIcon width={20} height={20} />
           </IconButton>
           <IconButton
             onClick={() => {
@@ -67,7 +67,7 @@ export default function Carousel({
               });
             }}
           >
-            <ChevronRightIcon fontSize={20} />
+            <ChevronRightIcon width={20} height={20} />
           </IconButton>
         </div>
       </div>

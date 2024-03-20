@@ -6,11 +6,11 @@ const settingsStore = {
     excludeLibraryItems: false,
   },
   radarr: {
-    baseUrl: "",
-    apiKey: "",
-    rootFolderPath: "",
-    qualityProfileId: 0,
-    profileId: 0,
+    baseUrl: "/api/radarr",
+    apiKey: "noop",
+    rootFolderPath: "/movies",
+    qualityProfileId: 1,
+    profileId: 1,
   },
   sonarr: {
     baseUrl: "",
