@@ -1,12 +1,31 @@
-import { useRef, useState } from "react";
+import { times } from "lodash";
 import classNames from "classnames";
+import { useRef, useState } from "react";
 import useResizeObserver from "use-resize-observer";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import IconButton from "$components/IconButton";
+import CardPlaceholder from "$components/CardPlaceholder";
 import Slot, { Slots } from "$components/Slot";
 
-export function CarouselPlaceholderItems() {
-  return <span>Loading...</span>;
+export function CarouselPlaceholderItems({
+  size = "md",
+  orientation = "landscape",
+}: {
+  size?: "dynamic" | "md" | "lg";
+  orientation?: "landscape" | "portrait";
+}) {
+  return (
+    <>
+      {times(10, (i) => (
+        <CardPlaceholder
+          key={i}
+          index={i}
+          size={size}
+          orientation={orientation}
+        />
+      ))}
+    </>
+  );
 }
 
 export default function Carousel({
