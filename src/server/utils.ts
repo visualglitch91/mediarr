@@ -1,5 +1,6 @@
 import { Express } from "express";
-import axios from "axios";
+import ky from "ky";
+import { isEmpty } from "lodash";
 
 export function createAxiosProxy(
   app: Express,
@@ -7,21 +8,19 @@ export function createAxiosProxy(
   baseURL: string,
   headers: Record<string, string>
 ) {
-  const api = axios.create({ baseURL, headers });
-
   app.use(path, async (req, res) => {
     try {
-      const response = await api.request({
-        url: req.url,
+      const response = await ky(`${baseURL}${req.url}`, {
         method: req.method,
-        data: req.body,
-        headers: { "content-type": req.headers["content-type"] },
-        responseType: "stream",
+        headers: { "content-type": req.headers["content-type"], ...headers },
+        ...(isEmpty(req.body) ? {} : { body: req.body }),
       });
 
-      res.status(response.status);
-      res.header(response.headers);
-      response.data.pipe(res);
+      const blob = await response.blob();
+      const buffer = Buffer.from(await blob.arrayBuffer());
+
+      res.type(blob.type);
+      res.send(buffer);
     } catch (err: any) {
       res.status(err.response?.status || 500).send(err.message);
     }

@@ -5,7 +5,7 @@ import { ClockIcon, StarIcon } from "@radix-ui/react-icons";
 import ContextMenu from "$components/ContextMenu";
 import ProgressBar from "$components/ProgressBar";
 import useRadarrMovie from "$lib/useRadarrMovie";
-import useSonarrSeries from "$lib/useSonarrSeries";
+import { useSonarrSeriesByTitle } from "$lib/useSonarrSeries";
 import useTitleModal from "$lib/useTitleModal";
 import LibraryItemContextItems from "$components/ContextMenu/LibraryItemContextItems";
 import { navigate } from "wouter/use-location";
@@ -40,7 +40,7 @@ export default function Card({
   openInModal?: boolean;
 }) {
   const $radarrMovie = useRadarrMovie(tmdbId);
-  const $sonarrSerie = useSonarrSeries(title);
+  const $sonarrSerie = useSonarrSeriesByTitle(title);
   const openTitleModal = useTitleModal();
 
   return (

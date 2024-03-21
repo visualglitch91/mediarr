@@ -4,6 +4,7 @@ import { ModalProvider } from "$lib/useModal";
 import Discovery from "$pages/Discovery";
 import Person from "$pages/Person";
 import Movie from "$pages/Movie";
+import Series from "$pages/Series";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="/" component={Discovery} />
           <Route path="/person/:tmdbId" component={Person} />
           <Route path="/movie/:tmdbId" component={Movie} />
+          <Route path="/series/:tmdbId" component={Series} />
         </Switch>
       </ModalProvider>
     </QueryClientProvider>

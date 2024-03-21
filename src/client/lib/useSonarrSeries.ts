@@ -4,15 +4,22 @@ function shorten(str: string) {
   return str.toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
 }
 
-export default function useSonarrSeries(title: string) {
+export function useSonarrSeriesByTitle(title: string | undefined) {
   return useAllSonarrSeries({
     select: (data) =>
-      data?.find(
-        (i) =>
-          shorten(i.titleSlug || "") === shorten(title) ||
-          i.alternateTitles?.find(
-            (t) => shorten(t.title || "") === shorten(title)
-          )
+      data?.find((i) =>
+        !title
+          ? false
+          : shorten(i.titleSlug || "") === shorten(title) ||
+            i.alternateTitles?.find(
+              (t) => shorten(t.title || "") === shorten(title)
+            )
       ),
+  });
+}
+
+export default function useSonarrSeries(tvdbId: number | undefined) {
+  return useAllSonarrSeries({
+    select: (data) => data?.find((i) => i.tvdbId === tvdbId),
   });
 }

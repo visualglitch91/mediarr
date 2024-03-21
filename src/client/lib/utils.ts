@@ -1,9 +1,4 @@
-import axios from "axios";
 import { isEmpty } from "lodash";
-
-export const api = axios.create({
-  baseURL: "/api",
-});
 
 export function round(number: number, decimalPlaces = 2) {
   return Math.floor(number * 10 ** decimalPlaces) / 10 ** decimalPlaces;

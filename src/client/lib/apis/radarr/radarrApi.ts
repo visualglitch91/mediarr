@@ -1,4 +1,4 @@
-import axios from "axios";
+import ky from "ky";
 import createClient from "openapi-fetch";
 import type { components, paths } from "$lib/apis/radarr/radarr.generated";
 import { getTmdbMovie } from "$lib/apis/tmdb/tmdbApi";
@@ -195,20 +195,20 @@ export const getRadarrHealth = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
 ) =>
-  axios
+  ky
     .get((baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/health", {
       headers: {
         "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
       },
     })
-    .then((res) => res.status === 200)
+    .then((res) => res.statusCode === 200)
     .catch(() => false);
 
 export const getRadarrRootFolders = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
 ) =>
-  axios
+  ky
     .get<components["schemas"]["RootFolderResource"][]>(
       (baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/rootFolder",
       {
@@ -217,13 +217,14 @@ export const getRadarrRootFolders = async (
         },
       }
     )
-    .then((res) => res.data || []);
+    .json()
+    .then((res) => res || []);
 
 export const getRadarrQualityProfiles = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
 ) =>
-  axios
+  ky
     .get<components["schemas"]["QualityProfileResource"][]>(
       (baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/qualityprofile",
       {
@@ -232,7 +233,8 @@ export const getRadarrQualityProfiles = async (
         },
       }
     )
-    .then((res) => res.data || []);
+    .json()
+    .then((res) => res || []);
 
 export function getRadarrPosterUrl(item: RadarrMovie, original = false) {
   const url =

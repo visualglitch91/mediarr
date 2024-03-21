@@ -35,17 +35,7 @@ export default function Movie({
   const tmdbId = parseInt(tmdbIdString);
   const tmdbUrl = "https://www.themoviedb.org/movie/" + tmdbId;
 
-  const $$addToRadarr = useMutation({
-    mutationFn: addMovieToRadarr,
-    onSuccess: () => $movie.refetch(),
-  });
-
   function openRequestModal() {
-    // if (!$radarrMovieStore.item?.id) return;
-
-    // modalStack.create(RequestModal, {
-    //   radarrId: $radarrMovie.data?.id,
-    // });
     console.log("open request modal");
   }
 
@@ -91,6 +81,11 @@ export default function Movie({
         castProps: await castPropsPromise,
       };
     },
+  });
+
+  const $$addToRadarr = useMutation({
+    mutationFn: addMovieToRadarr,
+    onSuccess: () => $radarrMovie.refetch(),
   });
 
   if (!movie) {

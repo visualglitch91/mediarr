@@ -1,4 +1,4 @@
-import axios from "axios";
+import ky from "ky";
 import createClient from "openapi-fetch";
 import type { components, paths } from "$lib/apis/sonarr/sonarr.generated";
 import { log } from "$lib/utils";
@@ -269,20 +269,20 @@ export const getSonarrHealth = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
 ) =>
-  axios
+  ky
     .get((baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/health", {
       headers: {
         "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
       },
     })
-    .then((res) => res.status === 200)
+    .then((res) => res.statusCode === 200)
     .catch(() => false);
 
 export const getSonarrRootFolders = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
 ) =>
-  axios
+  ky
     .get<components["schemas"]["RootFolderResource"][]>(
       (baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/rootFolder",
       {
@@ -291,13 +291,14 @@ export const getSonarrRootFolders = async (
         },
       }
     )
-    .then((res) => res.data || []);
+    .json()
+    .then((res) => res || []);
 
 export const getSonarrQualityProfiles = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
 ) =>
-  axios
+  ky
     .get<components["schemas"]["QualityProfileResource"][]>(
       (baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/qualityprofile",
       {
@@ -306,13 +307,14 @@ export const getSonarrQualityProfiles = async (
         },
       }
     )
-    .then((res) => res.data || []);
+    .json()
+    .then((res) => res || []);
 
 export const getSonarrLanguageProfiles = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
 ) =>
-  axios
+  ky
     .get<components["schemas"]["LanguageProfileResource"][]>(
       (baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/languageprofile",
       {
@@ -321,7 +323,8 @@ export const getSonarrLanguageProfiles = async (
         },
       }
     )
-    .then((res) => res.data || []);
+    .json()
+    .then((res) => res || []);
 
 export function getSonarrPosterUrl(item: SonarrSeries, original = false) {
   const url =

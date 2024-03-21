@@ -186,7 +186,7 @@ export default function TitlePageLayout({
             { "2xl:px-0": !isModal }
           )}
         >
-          <div className="grid grid-cols-4 sm:grid-cols-6 gap-4 sm:gap-x-8 rounded-xl py-4 max-w-screen-2xl 2xl:mx-auto">
+          <div className="grid grid-cols-4 sm:grid-cols-6 gap-4 sm:gap-x-8 rounded-xl py-4 max-w-screen-2xl 2xl:mx-auto w-full">
             <Slot slots={slots} name="infoDescription">
               <div className="flex flex-col gap-3 max-w-5xl row-span-3 col-span-4 sm:col-span-6 lg:col-span-3 mb-4 lg:mr-8">
                 {titleInformation ? (
@@ -230,7 +230,7 @@ export default function TitlePageLayout({
               </div>
             </Slot>
           </div>
-          <div className="flex flex-col gap-6 max-w-screen-2xl 2xl:mx-auto">
+          <div className="flex flex-col gap-6 max-w-screen-2xl 2xl:mx-auto w-full">
             <Slot slots={slots} name="carousels" />
           </div>
         </div>
