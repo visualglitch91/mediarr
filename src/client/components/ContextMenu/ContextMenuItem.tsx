@@ -13,7 +13,7 @@ export default function ContextMenuItem({
     <button
       onClick={onClick}
       className={classNames(
-        "text-sm font-medium tracking-wide px-3 py-1 hover:bg-zinc-200 hover:bg-opacity-10 rounded-md text-left cursor-default",
+        "text-sm font-medium tracking-wide px-3 py-1 hover:bg-zinc-200 hover:bg-opacity-10 rounded-md text-left cursor-pointer",
         { "opacity-75 pointer-events-none": disabled }
       )}
     >

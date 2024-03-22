@@ -1,5 +1,9 @@
 import { useState } from "react";
+import { usePopper } from "react-popper";
 import Slot, { Slots } from "$components/Slot";
+import { useOnClickOutside } from "$lib/useOnClickOutside";
+
+type DivRef = HTMLDivElement | null;
 
 export default function ContextMenu({
   heading,
@@ -13,10 +17,18 @@ export default function ContextMenu({
   position?: "absolute" | "fixed";
 }) {
   const [open, setOpen] = useState(false);
+  const [referenceElement, setReferenceElement] = useState<DivRef>(null);
+  const [popperElement, setPopperElement] = useState<DivRef>(null);
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: "top-end",
+  });
+
+  useOnClickOutside(popperElement, () => setOpen(false));
 
   return (
     <>
       <div
+        ref={setReferenceElement}
         onContextMenu={(e) => {
           e.preventDefault();
           setOpen(true);
@@ -31,6 +43,9 @@ export default function ContextMenu({
 
       {open && (
         <div
+          ref={setPopperElement}
+          style={styles.popper}
+          {...attributes.popper}
           className={`${position} z-50 my-2 px-1 py-1 bg-zinc-800 bg-opacity-50 rounded-lg backdrop-blur-xl flex flex-col w-max`}
         >
           <Slot slots={slots} name="title">
