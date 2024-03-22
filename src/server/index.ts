@@ -20,10 +20,6 @@ createAxiosProxy(app, "/api/sonarr", process.env.SONARR_API!, {
   "X-Api-Key": process.env.SONARR_API_KEY!,
 });
 
-createAxiosProxy(app, "/api/prowlarr", process.env.PROWLARR_API!, {
-  "X-Api-Key": process.env.PROWLARR_API_KEY!,
-});
-
 ViteExpress.listen(app, port, () =>
   console.log("Server is listening at port", port)
 );

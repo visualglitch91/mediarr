@@ -9,6 +9,7 @@ import Series from "$pages/Series";
 import Genre from "$pages/Genre";
 import Network from "$pages/Network";
 import Movies from "$pages/Movies";
+import AllSeries from "$pages/AllSeries";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/genre/:genre" component={Genre} />
             <Route path="/network/:network" component={Network} />
             <Route path="/movies" component={Movies} />
+            <Route path="/series" component={AllSeries} />
           </Switch>
         </div>
       </ModalProvider>

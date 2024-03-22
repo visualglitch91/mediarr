@@ -341,10 +341,6 @@ export const getPosterProps = (
       ? "movie"
       : "series");
 
-  if (type === "series") {
-    console.log(item);
-  }
-
   return {
     tmdbId: item.id || 0,
     title: item.title || item.name || "",

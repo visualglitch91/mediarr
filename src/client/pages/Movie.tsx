@@ -248,17 +248,6 @@ export default function Movie({
                     );
                   }}
                 />
-
-                <div className="flex gap-4 flex-wrap col-span-4 sm:col-span-6 mt-4">
-                  <Button onClick={openRequestModal}>
-                    <span className="mr-2">Request Movie</span>
-                    <PlusIcon width={20} height={20} />
-                  </Button>
-                  <Button>
-                    <span className="mr-2">Manage</span>
-                    <ArchiveIcon width={20} height={20} />
-                  </Button>
-                </div>
               </>
             )}
           />

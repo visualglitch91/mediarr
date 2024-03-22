@@ -10,7 +10,16 @@ export function createAxiosProxy(
 ) {
   app.use(path, async (req, res) => {
     try {
-      const response = await ky(`${baseURL}${req.url}`, {
+      const requestURL = new URL(`${baseURL}${req.url}`);
+
+      if (req.url.startsWith("/MediaCover/")) {
+        requestURL.pathname = `/api/v3${requestURL.pathname}`;
+        requestURL.searchParams.set("apikey", headers["X-Api-Key"]);
+      }
+
+      console.log(requestURL.toString());
+
+      const response = await ky(requestURL.toString(), {
         method: req.method,
         headers: { "content-type": req.headers["content-type"], ...headers },
         ...(isEmpty(req.body) ? {} : { body: req.body }),

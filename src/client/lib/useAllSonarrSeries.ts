@@ -1,7 +1,7 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { SonarrSeries, getSonarrSeries } from "./apis/sonarr/sonarrApi";
 
-export default function useAllSonarrSeries<K>(
+export default function useAllSonarrSeries<K = SonarrSeries[]>(
   options?: Omit<
     UseQueryOptions<SonarrSeries[], any, K>,
     "queryKey" | "queryFn"

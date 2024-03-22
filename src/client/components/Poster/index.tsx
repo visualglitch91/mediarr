@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { navigate } from "wouter/use-location";
 import { StarIcon } from "@radix-ui/react-icons";
 import { TitleType } from "$lib/types";
+import { getTmdbIdFromTvdbId } from "$lib/apis/tmdb/tmdbApi";
 import LazyImg from "$components/LazyImg";
 import Slot, { Slots } from "$components/Slot";
 import RadarrStatus from "$components/RadarrStatus";
@@ -52,8 +53,15 @@ export default function Poster({
           "shadow-lg": shadow,
         }
       )}
-      onClick={() => {
-        navigate(tmdbId || tvdbId ? `/${type}/${tmdbId || tvdbId}` : "/");
+      onClick={async () => {
+        const _tmdbId =
+          tmdbId || (tvdbId && (await getTmdbIdFromTvdbId(tvdbId)));
+
+        if (!_tmdbId) {
+          return;
+        }
+
+        navigate(`/${type}/${_tmdbId}`);
       }}
     >
       <LazyImg
