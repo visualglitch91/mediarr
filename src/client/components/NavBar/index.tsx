@@ -78,9 +78,6 @@ export default function NavBar() {
       <LinkAnchor href="/series" className={getLinkStyle("/series")}>
         TV Shows
       </LinkAnchor>
-      <LinkAnchor href="/settings" className={getLinkStyle("/settings")}>
-        Settings
-      </LinkAnchor>
     </>
   );
 
