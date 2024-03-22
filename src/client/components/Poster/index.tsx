@@ -2,14 +2,12 @@ import classNames from "classnames";
 import { navigate } from "wouter/use-location";
 import { StarIcon } from "@radix-ui/react-icons";
 import { TitleType } from "$lib/types";
-import useTitleModal from "$lib/useTitleModal";
 import LazyImg from "$components/LazyImg";
 import Slot, { Slots } from "$components/Slot";
 import RadarrStatus from "$components/RadarrStatus";
 import SonarrStatus from "$components/SonarrrStatus";
 
 export default function Poster({
-  openInModal = true,
   type = "movie",
   title = "",
   subtitle = "",
@@ -23,7 +21,6 @@ export default function Poster({
   tvdbId,
   slots,
 }: {
-  openInModal?: boolean;
   type?: TitleType;
   tmdbId?: number;
   tvdbId?: number;
@@ -37,8 +34,6 @@ export default function Poster({
   backdropUrl: string;
   slots?: Slots<"topLeft" | "topRight" | "bottomRight" | "footer">;
 }) {
-  const openTitleModal = useTitleModal();
-
   return (
     <button
       type="button"
@@ -58,15 +53,7 @@ export default function Poster({
         }
       )}
       onClick={() => {
-        if (openInModal) {
-          if (tmdbId) {
-            openTitleModal({ type, id: tmdbId, provider: "tmdb" });
-          } else if (tvdbId) {
-            openTitleModal({ type, id: tvdbId, provider: "tvdb" });
-          }
-        } else {
-          navigate(tmdbId || tvdbId ? `/${type}/${tmdbId || tvdbId}` : "/");
-        }
+        navigate(tmdbId || tvdbId ? `/${type}/${tmdbId || tvdbId}` : "/");
       }}
     >
       <LazyImg

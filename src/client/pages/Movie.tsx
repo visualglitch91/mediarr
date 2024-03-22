@@ -26,12 +26,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 
 export default function Movie({
   params: { tmdbId: tmdbIdString },
-  isModal = false,
-  handleCloseModal = () => {},
-}: {
-  isModal?: boolean;
-  handleCloseModal?: () => void;
-} & RouteComponentProps<{ tmdbId: string }>) {
+}: RouteComponentProps<{ tmdbId: string }>) {
   const tmdbId = parseInt(tmdbIdString);
   const tmdbUrl = "https://www.themoviedb.org/movie/" + tmdbId;
 
@@ -84,9 +79,7 @@ export default function Movie({
   });
 
   if (!movie) {
-    return (
-      <TitlePageLayout isModal={isModal} handleCloseModal={handleCloseModal} />
-    );
+    return <TitlePageLayout />;
   }
 
   return (
@@ -101,8 +94,6 @@ export default function Movie({
         tagline: movie?.tagline || movie?.title || "",
         overview: movie?.overview || "",
       }}
-      isModal={isModal}
-      handleCloseModal={handleCloseModal}
       slots={{
         titleInfo: (
           <>
@@ -332,11 +323,7 @@ export default function Movie({
                       }}
                     >
                       {tmdbRecommendationProps.map((props) => (
-                        <Card
-                          key={props.tmdbId}
-                          {...props}
-                          openInModal={isModal}
-                        />
+                        <Card key={props.tmdbId} {...props} />
                       ))}
                     </Carousel>
                   )}
@@ -349,11 +336,7 @@ export default function Movie({
                       }}
                     >
                       {tmdbSimilarProps.map((props) => (
-                        <Card
-                          key={props.tmdbId}
-                          {...props}
-                          openInModal={isModal}
-                        />
+                        <Card key={props.tmdbId} {...props} />
                       ))}
                     </Carousel>
                   )}

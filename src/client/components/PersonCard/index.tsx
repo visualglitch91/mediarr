@@ -2,12 +2,10 @@ import cx from "classnames";
 import { navigate } from "wouter/use-location";
 import type { TitleType } from "$lib/types";
 import { TMDB_PROFILE_SMALL } from "$lib/constants";
-import useTitleModal from "$lib/useTitleModal";
 
 export default function PersonCard({
   type = "person",
   size = "md",
-  openInModal = true,
   tmdbId,
   backdropUri,
   name,
@@ -21,8 +19,6 @@ export default function PersonCard({
   name: string;
   subtitle: string;
 }) {
-  const openTitleModal = useTitleModal();
-
   return (
     <button
       type="button"
@@ -35,11 +31,7 @@ export default function PersonCard({
         }
       )}
       onClick={() => {
-        if (openInModal) {
-          openTitleModal({ type, id: tmdbId, provider: "tmdb" });
-        } else {
-          navigate(`/${type}/${tmdbId}`);
-        }
+        navigate(`/${type}/${tmdbId}`);
       }}
     >
       <div className="mx-auto rounded-full overflow-hidden flex-shrink-0 aspect-square w-full bg-zinc-200 bg-opacity-20">

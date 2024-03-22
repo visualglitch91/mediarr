@@ -38,12 +38,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 
 export default function Series({
   params: { tmdbId: tmdbIdString },
-  isModal = false,
-  handleCloseModal = () => {},
-}: {
-  isModal?: boolean;
-  handleCloseModal?: () => void;
-} & RouteComponentProps<{ tmdbId: string }>) {
+}: RouteComponentProps<{ tmdbId: string }>) {
   const tmdbId = parseInt(tmdbIdString);
 
   const $series = useQuery({
@@ -112,15 +107,11 @@ export default function Series({
   if (!$series.data || !$seasons.data) {
     return (
       <TitlePageLayout
-        isModal={isModal}
-        handleCloseModal={handleCloseModal}
         slots={{
           episodesCarousel: (
             <Carousel
               gradientFromColor="from-stone-950"
-              className={classNames("px-2 sm:px-4 lg:px-8", {
-                "2xl:px-0": !isModal,
-              })}
+              className={"px-2 sm:px-4 lg:px-8 2xl:px-0"}
               heading="Episodes"
             >
               <CarouselPlaceholderItems />
@@ -147,8 +138,6 @@ export default function Series({
         tagline: tmdbSeries.tagline || tmdbSeries.name || "",
         overview: tmdbSeries.overview || "",
       }}
-      isModal={isModal}
-      handleCloseModal={handleCloseModal}
       slots={{
         titleInfo: (
           <>
@@ -195,9 +184,7 @@ export default function Series({
         episodesCarousel: (
           <Carousel
             gradientFromColor="from-stone-950"
-            className={classNames("px-2 sm:px-4 lg:px-8", {
-              "2xl:px-0": !isModal,
-            })}
+            className={"px-2 sm:px-4 lg:px-8 2xl:px-0"}
             slots={{
               title: (
                 <UICarousel className="flex gap-6">
@@ -476,11 +463,7 @@ export default function Series({
                     }}
                   >
                     {tmdbRecommendationProps.map((props) => (
-                      <Card
-                        key={props.tmdbId}
-                        {...props}
-                        openInModal={isModal}
-                      />
+                      <Card key={props.tmdbId} {...props} />
                     ))}
                   </Carousel>
                 )}
@@ -492,11 +475,7 @@ export default function Series({
                     }}
                   >
                     {tmdbSimilarProps.map((props) => (
-                      <Card
-                        key={props.tmdbId}
-                        {...props}
-                        openInModal={isModal}
-                      />
+                      <Card key={props.tmdbId} {...props} />
                     ))}
                   </Carousel>
                 )}

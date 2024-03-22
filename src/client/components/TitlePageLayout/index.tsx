@@ -1,18 +1,9 @@
+import useResizeObserver from "use-resize-observer";
 import { TMDB_IMAGES_ORIGINAL, TMDB_POSTER_SMALL } from "$lib/constants";
 import type { TitleType } from "$lib/types";
-import classNames from "classnames";
-import {
-  ChevronLeftIcon,
-  Cross2Icon,
-  ExternalLinkIcon,
-} from "@radix-ui/react-icons";
 import Slot, { Slots } from "$components/Slot";
-import IconButton from "$components/IconButton";
 import LazyImg from "$components/LazyImg";
 import TruncatedText from "$components/TruncatedText";
-import useResizeObserver from "use-resize-observer";
-import RadarrStatus from "$components/RadarrStatus";
-import SonarrStatus from "$components/SonarrrStatus";
 
 const body = document.body;
 
@@ -25,13 +16,9 @@ function getBackdropUri(uris: string[]) {
 }
 
 export default function TitlePageLayout({
-  isModal = false,
-  handleCloseModal = () => {},
   titleInformation,
   slots,
 }: {
-  isModal?: boolean;
-  handleCloseModal?: () => void;
   titleInformation?: {
     tmdbId: number;
     tvdbId?: number;
@@ -52,24 +39,20 @@ export default function TitlePageLayout({
     | "carousels"
   >;
 }) {
-  const { ref: topRef, height: topHeight = 0 } = useResizeObserver();
   const { ref: bottomRef, height: bottomHeight = 0 } = useResizeObserver();
 
   useResizeObserver({ ref: body });
 
-  const imageHeight = isModal
-    ? topHeight
-    : window.innerHeight - bottomHeight * 0.3;
+  const imageHeight = window.innerHeight - bottomHeight * 0.3;
 
   return (
     <>
       {/* Desktop */}
       <div
         style={{ height: imageHeight }}
-        className={classNames(
-          "hidden sm:block inset-x-0 bg-center bg-cover bg-stone-950",
-          { absolute: isModal, fixed: !isModal }
-        )}
+        className={
+          "hidden sm:block inset-x-0 bg-center bg-cover bg-stone-950 fixed"
+        }
       >
         {titleInformation && (
           <LazyImg
@@ -100,47 +83,10 @@ export default function TitlePageLayout({
       </div>
 
       <div className="flex flex-col min-h-screen">
-        <div
-          className={classNames("flex flex-col relative z-[1]", {
-            "h-[85vh] sm:h-screen": !isModal,
-            "": isModal,
-          })}
-        >
+        <div className={"flex flex-col relative z-[1] h-[85vh] sm:h-screen"}>
           <div
-            ref={topRef}
-            className={classNames(
-              "flex-1 relative flex pt-24 px-2 sm:px-4 lg:px-8 pb-6",
-              { "min-h-[60vh]": isModal }
-            )}
+            className={"flex-1 relative flex pt-24 px-2 sm:px-4 lg:px-8 pb-6"}
           >
-            {isModal && (
-              <>
-                {titleInformation && (
-                  <a
-                    href={`/${titleInformation.type}/${titleInformation.tmdbId}`}
-                    className="absolute top-8 right-4 sm:right-8 z-10"
-                  >
-                    <IconButton>
-                      <ExternalLinkIcon width={20} height={20} />
-                    </IconButton>
-                  </a>
-                )}
-                <div className="absolute top-8 left-4 sm:left-8 z-10">
-                  <button
-                    className="flex items-center sm:hidden font-medium"
-                    onClick={handleCloseModal}
-                  >
-                    <ChevronLeftIcon width={20} height={20} />
-                    Back
-                  </button>
-                  <div className="hidden sm:block">
-                    <IconButton onClick={handleCloseModal}>
-                      <Cross2Icon width={20} height={20} />
-                    </IconButton>
-                  </div>
-                </div>
-              </>
-            )}
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950 to-30%" />
             <div className="z-[1] flex-1 flex justify-end gap-8 items-end max-w-screen-2xl mx-auto">
               {titleInformation ? (
@@ -184,10 +130,9 @@ export default function TitlePageLayout({
         </div>
 
         <div
-          className={classNames(
-            "flex-1 flex flex-col gap-6 bg-stone-950 px-2 sm:px-4 lg:px-8 pb-6 relative",
-            { "2xl:px-0": !isModal }
-          )}
+          className={
+            "flex-1 flex flex-col gap-6 bg-stone-950 px-2 sm:px-4 lg:px-8 pb-6 relative 2xl:px-0"
+          }
         >
           <div className="grid grid-cols-4 sm:grid-cols-6 gap-4 sm:gap-x-8 rounded-xl py-4 max-w-screen-2xl 2xl:mx-auto w-full">
             <Slot slots={slots} name="infoDescription">

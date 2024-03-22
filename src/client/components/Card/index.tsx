@@ -1,13 +1,12 @@
+import classNames from "classnames";
+import { navigate } from "wouter/use-location";
+import { ClockIcon, StarIcon } from "@radix-ui/react-icons";
 import type { TitleType } from "$lib/types";
 import { formatMinutesToTime } from "$lib/utils";
-import classNames from "classnames";
-import { ClockIcon, StarIcon } from "@radix-ui/react-icons";
-import ContextMenu from "$components/ContextMenu";
 import useRadarrMovie from "$lib/useRadarrMovie";
 import { useSonarrSeriesByTitle } from "$lib/useSonarrSeries";
-import useTitleModal from "$lib/useTitleModal";
+import ContextMenu from "$components/ContextMenu";
 import LibraryItemContextItems from "$components/ContextMenu/LibraryItemContextItems";
-import { navigate } from "wouter/use-location";
 
 export default function Card({
   tmdbId,
@@ -21,7 +20,6 @@ export default function Card({
   rating,
   available = true,
   size = "md",
-  openInModal = true,
 }: {
   tmdbId: number;
   type?: TitleType;
@@ -34,11 +32,9 @@ export default function Card({
   rating: number;
   available?: boolean;
   size?: "dynamic" | "md" | "lg";
-  openInModal?: boolean;
 }) {
   const $radarrMovie = useRadarrMovie(tmdbId);
   const $sonarrSerie = useSonarrSeriesByTitle(title);
-  const openTitleModal = useTitleModal();
 
   return (
     <ContextMenu
@@ -65,11 +61,7 @@ export default function Card({
           }
         )}
         onClick={() => {
-          if (openInModal) {
-            openTitleModal({ type, id: tmdbId, provider: "tmdb" });
-          } else {
-            navigate(`/${type}/${tmdbId}`);
-          }
+          navigate(`/${type}/${tmdbId}`);
         }}
       >
         <div
