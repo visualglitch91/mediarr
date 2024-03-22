@@ -1,6 +1,7 @@
 import { Route, Switch } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ModalProvider } from "$lib/useModal";
+import NavBar from "$components/NavBar";
 import Discovery from "$pages/Discovery";
 import Person from "$pages/Person";
 import Movie from "$pages/Movie";
@@ -14,14 +15,17 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
-        <Switch>
-          <Route path="/" component={Discovery} />
-          <Route path="/person/:tmdbId" component={Person} />
-          <Route path="/movie/:tmdbId" component={Movie} />
-          <Route path="/series/:tmdbId" component={Series} />
-          <Route path="/genre/:genre" component={Genre} />
-          <Route path="/network/:network" component={Network} />
-        </Switch>
+        <NavBar />
+        <div className="min-h-screen">
+          <Switch>
+            <Route path="/" component={Discovery} />
+            <Route path="/person/:tmdbId" component={Person} />
+            <Route path="/movie/:tmdbId" component={Movie} />
+            <Route path="/series/:tmdbId" component={Series} />
+            <Route path="/genre/:genre" component={Genre} />
+            <Route path="/network/:network" component={Network} />
+          </Switch>
+        </div>
       </ModalProvider>
     </QueryClientProvider>
   );

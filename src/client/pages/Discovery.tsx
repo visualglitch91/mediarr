@@ -127,7 +127,7 @@ export default function Discovery() {
   });
 
   return (
-    <>
+    <div className="pt-24">
       <TitleShowcase />
 
       <div className="flex flex-col gap-12 py-6 bg-stone-950">
@@ -230,6 +230,6 @@ export default function Discovery() {
           ))}
         </Carousel>
       </div>
-    </>
+    </div>
   );
 }
