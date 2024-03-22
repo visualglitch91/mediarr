@@ -3,7 +3,6 @@ import { formatMinutesToTime } from "$lib/utils";
 import classNames from "classnames";
 import { ClockIcon, StarIcon } from "@radix-ui/react-icons";
 import ContextMenu from "$components/ContextMenu";
-import ProgressBar from "$components/ProgressBar";
 import useRadarrMovie from "$lib/useRadarrMovie";
 import { useSonarrSeriesByTitle } from "$lib/useSonarrSeries";
 import useTitleModal from "$lib/useTitleModal";
@@ -21,7 +20,6 @@ export default function Card({
   backdropUrl,
   rating,
   available = true,
-  progress = 0,
   size = "md",
   openInModal = true,
 }: {
@@ -35,7 +33,6 @@ export default function Card({
   backdropUrl: string;
   rating: number;
   available?: boolean;
-  progress?: number;
   size?: "dynamic" | "md" | "lg";
   openInModal?: boolean;
 }) {
@@ -88,7 +85,7 @@ export default function Card({
             }
           )}
         />
-        <div className="flex flex-col justify-between flex-1 transition-opacity cursor-pointer relative opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
+        <div className="flex flex-col justify-between flex-1 transition-opacity cursor-pointer relative opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 w-full">
           <div className="text-left">
             <h1 className="font-bold tracking-wider text-lg">{title}</h1>
             <div className="text-xs text-zinc-300 tracking-wider font-medium">
@@ -111,26 +108,7 @@ export default function Card({
               </div>
             ) : (
               <>
-                {runtimeMinutes && (
-                  <div className="flex gap-1.5 items-center">
-                    <ClockIcon />
-                    <div className="text-sm text-zinc-200">
-                      {progress
-                        ? formatMinutesToTime(
-                            runtimeMinutes - runtimeMinutes * (progress / 100)
-                          ) + " left"
-                        : formatMinutesToTime(runtimeMinutes)}
-                    </div>
-                  </div>
-                )}
-
-                {seasons && (
-                  <div className="text-sm text-zinc-200">
-                    {seasons} Season{seasons > 1 ? "s" : ""}
-                  </div>
-                )}
-
-                {rating && (
+                {rating > 0 && (
                   <div className="flex gap-1.5 items-center">
                     <StarIcon />
                     <div className="text-sm text-zinc-200">
@@ -138,15 +116,25 @@ export default function Card({
                     </div>
                   </div>
                 )}
+
+                {seasons > 0 && (
+                  <div className="text-sm text-zinc-200">
+                    {seasons} Season{seasons > 1 ? "s" : ""}
+                  </div>
+                )}
+
+                {runtimeMinutes > 0 && (
+                  <div className="flex gap-1.5 items-center">
+                    <ClockIcon />
+                    <div className="text-sm text-zinc-200">
+                      {formatMinutesToTime(runtimeMinutes)}
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>
         </div>
-        {progress && (
-          <div className="relative">
-            <ProgressBar value={progress} />
-          </div>
-        )}
       </button>
     </ContextMenu>
   );

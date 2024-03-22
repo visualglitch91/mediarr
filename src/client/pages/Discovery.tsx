@@ -187,7 +187,7 @@ export default function Discovery() {
           slots={{ title: <Title>Genres</Title> }}
         >
           {Object.values(genres).map((genre) => (
-            <GenreCard key={genre.tmdbGenreId} {...genre} />
+            <GenreCard genre={genre} key={genre.key} />
           ))}
         </Carousel>
 
@@ -226,7 +226,7 @@ export default function Discovery() {
           slots={{ title: <Title>Networks</Title> }}
         >
           {Object.values(networks).map((network) => (
-            <NetworkCard key={network.tmdbNetworkId} {...network} />
+            <NetworkCard network={network} key={network.key} />
           ))}
         </Carousel>
       </div>

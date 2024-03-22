@@ -238,11 +238,20 @@ export const getTmdbNetworkSeries = (networkId: number) =>
     },
   }).then((res) => res.data?.results || []);
 
-export const getTmdbGenreMovies = (genreId: number) =>
+export const getTmdbGenreMovies = (genreId: number[]) =>
   TmdbApiOpen.GET("/3/discover/movie", {
     params: {
       query: {
-        with_genres: String(genreId),
+        with_genres: genreId.join(","),
+      },
+    },
+  }).then((res) => res.data?.results || []);
+
+export const getTmdbGenreSeries = (genreId: number[]) =>
+  TmdbApiOpen.GET("/3/discover/tv", {
+    params: {
+      query: {
+        with_genres: genreId.join(","),
       },
     },
   }).then((res) => res.data?.results || []);
