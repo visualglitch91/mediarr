@@ -2,7 +2,7 @@ import { Express } from "express";
 import ky from "ky";
 import { isEmpty } from "lodash";
 
-export function createAxiosProxy(
+export function createAPIProxy(
   app: Express,
   path: string,
   baseURL: string,
@@ -16,8 +16,6 @@ export function createAxiosProxy(
         requestURL.pathname = `/api/v3${requestURL.pathname}`;
         requestURL.searchParams.set("apikey", headers["X-Api-Key"]);
       }
-
-      console.log(requestURL.toString());
 
       const response = await ky(requestURL.toString(), {
         method: req.method,

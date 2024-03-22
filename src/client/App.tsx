@@ -1,4 +1,4 @@
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ModalProvider } from "$lib/useModal";
 import NavBar from "$components/NavBar";
@@ -10,10 +10,18 @@ import Genre from "$pages/Genre";
 import Network from "$pages/Network";
 import Movies from "$pages/Movies";
 import AllSeries from "$pages/AllSeries";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
 export default function App() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }, [location]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ModalProvider>

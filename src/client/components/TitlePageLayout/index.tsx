@@ -4,6 +4,7 @@ import type { TitleType } from "$lib/types";
 import Slot, { Slots } from "$components/Slot";
 import LazyImg from "$components/LazyImg";
 import TruncatedText from "$components/TruncatedText";
+import classNames from "classnames";
 
 const body = document.body;
 
@@ -41,6 +42,9 @@ export default function TitlePageLayout({
 }) {
   const { ref: bottomRef, height: bottomHeight = 0 } = useResizeObserver();
 
+  const backdropUri =
+    titleInformation && getBackdropUri(titleInformation.backdropUriCandidates);
+
   useResizeObserver({ ref: body });
 
   const imageHeight = window.innerHeight - bottomHeight * 0.3;
@@ -48,24 +52,18 @@ export default function TitlePageLayout({
   return (
     <>
       {/* Desktop */}
-      <div
-        style={{ height: imageHeight }}
-        className={
-          "hidden sm:block inset-x-0 bg-center bg-cover bg-stone-950 fixed"
-        }
-      >
-        {titleInformation && (
-          <LazyImg
-            src={
-              TMDB_IMAGES_ORIGINAL +
-              getBackdropUri(titleInformation.backdropUriCandidates)
-            }
-            className="h-full"
-          >
+      {backdropUri && (
+        <div
+          style={{ height: imageHeight }}
+          className={
+            "hidden sm:block inset-x-0 bg-center bg-cover bg-stone-950 fixed"
+          }
+        >
+          <LazyImg src={TMDB_IMAGES_ORIGINAL + backdropUri} className="h-full">
             <div className="absolute inset-0 bg-darken" />
           </LazyImg>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Mobile */}
       <div
@@ -83,10 +81,13 @@ export default function TitlePageLayout({
       </div>
 
       <div className="flex flex-col min-h-screen">
-        <div className={"flex flex-col relative z-[1] h-[85vh] sm:h-screen"}>
-          <div
-            className={"flex-1 relative flex pt-24 px-2 sm:px-4 lg:px-8 pb-6"}
-          >
+        <div
+          className={classNames("flex flex-col relative z-[1] ", {
+            "pt-10": !backdropUri,
+            "h-[85vh] sm:h-screen": !!backdropUri,
+          })}
+        >
+          <div className="flex-1 relative flex pt-24 px-2 sm:px-4 lg:px-8 pb-6">
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950 to-30%" />
             <div className="z-[1] flex-1 flex justify-end gap-8 items-end max-w-screen-2xl mx-auto">
               {titleInformation ? (
