@@ -13,11 +13,11 @@ const settingsStore = {
     profileId: 1,
   },
   sonarr: {
-    baseUrl: "",
-    apiKey: "",
-    rootFolderPath: "",
-    qualityProfileId: 0,
-    languageProfileId: 0,
+    baseUrl: "/api/sonarr",
+    apiKey: "noop",
+    rootFolderPath: "/tvshows",
+    qualityProfileId: 1,
+    languageProfileId: 1,
   },
 };
 

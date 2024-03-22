@@ -5,7 +5,6 @@ import {
   Cross1Icon,
   HamburgerMenuIcon,
   MagnifyingGlassIcon,
-  PersonIcon,
 } from "@radix-ui/react-icons";
 import useMountEffect from "$lib/useMountEffect";
 import useModal from "$lib/useModal";
@@ -73,11 +72,11 @@ export default function NavBar() {
       <LinkAnchor href="/" className={getLinkStyle("/")}>
         Home
       </LinkAnchor>
-      <LinkAnchor href="/library" className={getLinkStyle("/library")}>
-        Library
+      <LinkAnchor href="/movies" className={getLinkStyle("/movies")}>
+        Movies
       </LinkAnchor>
-      <LinkAnchor href="/sources" className={getLinkStyle("/sources")}>
-        Sources
+      <LinkAnchor href="/series" className={getLinkStyle("/series")}>
+        TV Shows
       </LinkAnchor>
       <LinkAnchor href="/settings" className={getLinkStyle("/settings")}>
         Settings

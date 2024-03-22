@@ -28,7 +28,7 @@ function parseCardProps(
     first_air_date?: string;
     poster_path?: string;
   }[],
-  type?: TitleType
+  type: TitleType
 ): React.ComponentProps<typeof Poster>[] {
   return items
     .map((item) => getPosterProps(item, type))
@@ -49,7 +49,7 @@ export default function Discovery() {
 
   const $upcomingMovies = useQuery({
     queryKey: [
-      "discover__movie",
+      "pages__discover__upcoming_movies",
       {
         query: {
           "primary_release_date.gte": formatDateToYearMonthDay(new Date()),
@@ -69,7 +69,7 @@ export default function Discovery() {
 
   const $upcomingSeries = useQuery({
     queryKey: [
-      "discover__tv",
+      "pages__discover__upcoming_series",
       {
         query: {
           "first_air_date.gte": formatDateToYearMonthDay(new Date()),
@@ -78,6 +78,7 @@ export default function Discovery() {
           with_original_language: parseIncludedLanguages(
             settingsStore.discover.includedLanguages
           ),
+          append_to_response: "external_ids",
         },
       },
     ] as const,
@@ -88,7 +89,7 @@ export default function Discovery() {
 
   const $digitalReleases = useQuery({
     queryKey: [
-      "discover__movie",
+      "pages__discover__digital_releases",
       {
         query: {
           with_release_type: 4,
@@ -108,7 +109,7 @@ export default function Discovery() {
 
   const $nowStreaming = useQuery({
     queryKey: [
-      "discover__tv",
+      "pages__discover__now_streaming",
       {
         query: {
           "air_date.gte": formatDateToYearMonthDay(new Date()),
@@ -118,6 +119,7 @@ export default function Discovery() {
           with_original_language: parseIncludedLanguages(
             settingsStore.discover.includedLanguages
           ),
+          append_to_response: "external_ids",
         },
       },
     ] as const,
@@ -160,9 +162,9 @@ export default function Discovery() {
             query={$upcomingMovies}
             loading={<CarouselPlaceholderItems />}
             success={(res) => {
-              return parseCardProps(res?.data?.results || []).map((props) => (
-                <Poster key={props.tmdbId} {...props} />
-              ));
+              return parseCardProps(res?.data?.results || [], "movie").map(
+                (props) => <Poster key={props.tmdbId} {...props} />
+              );
             }}
           />
         </Carousel>
@@ -175,9 +177,9 @@ export default function Discovery() {
             query={$upcomingSeries}
             loading={<CarouselPlaceholderItems />}
             success={(res) => {
-              return parseCardProps(res?.data?.results || []).map((props) => (
-                <Poster key={props.tmdbId} {...props} />
-              ));
+              return parseCardProps(res?.data?.results || [], "series").map(
+                (props) => <Poster key={props.tmdbId} {...props} />
+              );
             }}
           />
         </Carousel>
@@ -199,9 +201,9 @@ export default function Discovery() {
             query={$digitalReleases}
             loading={<CarouselPlaceholderItems />}
             success={(res) => {
-              return parseCardProps(res?.data?.results || []).map((props) => (
-                <Poster key={props.tmdbId} {...props} />
-              ));
+              return parseCardProps(res?.data?.results || [], "movie").map(
+                (props) => <Poster key={props.tmdbId} {...props} />
+              );
             }}
           />
         </Carousel>
@@ -214,9 +216,9 @@ export default function Discovery() {
             query={$nowStreaming}
             loading={<CarouselPlaceholderItems />}
             success={(res) => {
-              return parseCardProps(res?.data?.results || []).map((props) => (
-                <Poster key={props.tmdbId} {...props} />
-              ));
+              return parseCardProps(res?.data?.results || [], "series").map(
+                (props) => <Poster key={props.tmdbId} {...props} />
+              );
             }}
           />
         </Carousel>

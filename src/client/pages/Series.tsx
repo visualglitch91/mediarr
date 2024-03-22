@@ -1,12 +1,11 @@
 import { RouteComponentProps } from "wouter";
 import classNames from "classnames";
 import {
-  ArchiveIcon,
   ChevronLeftIcon,
   DotFilledIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   getTmdbSeries,
   getTmdbSeriesRecommendations,
@@ -14,7 +13,6 @@ import {
   getTmdbSeriesSimilar,
   type TmdbSeriesFull2,
 } from "$lib/apis/tmdb/tmdbApi";
-import { addSeriesToSonarr } from "$lib/apis/sonarr/sonarrApi";
 import { formatMinutesToTime, formatSize, notEmpty } from "$lib/utils";
 import { TMDB_BACKDROP_SMALL } from "$lib/constants";
 import Button from "$components/Button";
@@ -32,6 +30,7 @@ import QueryRenderer from "$components/QueryRenderer";
 import useSonarrSeries from "$lib/useSonarrSeries";
 import useSonarrDownload from "$lib/useSonarrDownload";
 import { useState } from "react";
+import SonarrStatus from "$components/SonarrrStatus";
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <div className="font-medium text-lg">{children}</div>
@@ -103,11 +102,6 @@ export default function Series({
     },
   });
 
-  const $$addToSonarr = useMutation({
-    mutationFn: addSeriesToSonarr,
-    onSuccess: () => $sonarrSeries.refetch(),
-  });
-
   const [seasonSelectVisible, setSeasonSelectVisible] = useState(false);
   const [visibleSeasonNumber, setVisibleSeasonNumber] = useState(1);
 
@@ -144,6 +138,7 @@ export default function Series({
     <TitlePageLayout
       titleInformation={{
         tmdbId,
+        tvdbId,
         type: "series",
         backdropUriCandidates:
           tmdbSeries.images?.backdrops?.map((b) => b.file_path || "") || [],
@@ -172,29 +167,27 @@ export default function Series({
               <div className="placeholder h-10 w-48 rounded-xl" />
             ) : (
               <>
+                {!$sonarrSeries.data &&
+                settingsStore.sonarr.apiKey &&
+                settingsStore.sonarr.baseUrl ? (
+                  <Button type="primary" onClick={openRequestModal}>
+                    <span>Add to Sonarr</span>
+                    <PlusIcon width={20} height={20} />
+                  </Button>
+                ) : $sonarrSeries.data && tvdbId ? (
+                  <div
+                    className="rounded-xl overflow-hidden flex stretch-items"
+                    style={{ height: 40 }}
+                  >
+                    <SonarrStatus size="lg" identifier={{ tvdbId }} />
+                  </div>
+                ) : null}
                 <OpenInButton
                   title={tmdbSeries.name}
                   sonarrSeries={$sonarrSeries.data}
                   type="series"
                   tmdbId={tmdbId}
                 />
-                {!$sonarrSeries.data &&
-                settingsStore.sonarr.apiKey &&
-                settingsStore.sonarr.baseUrl ? (
-                  <Button
-                    type="primary"
-                    disabled={$$addToSonarr.isPending}
-                    onClick={() => $$addToSonarr.mutate(tmdbId)}
-                  >
-                    <span>Add to Sonarr</span>
-                    <PlusIcon width={20} height={20} />
-                  </Button>
-                ) : $sonarrSeries.data ? (
-                  <Button type="primary" onClick={openRequestModal}>
-                    <span className="mr-2">Request Series</span>
-                    <PlusIcon width={20} height={20} />
-                  </Button>
-                ) : null}
               </>
             )}
           </div>
@@ -421,17 +414,6 @@ export default function Series({
                       ) : null
                     }
                   />
-
-                  <div className="flex gap-4 flex-wrap col-span-4 sm:col-span-6 mt-4">
-                    <Button onClick={openRequestModal}>
-                      <span className="mr-2">Request Series</span>
-                      <PlusIcon width={20} height={20} />
-                    </Button>
-                    <Button>
-                      <span className="mr-2">Manage</span>
-                      <ArchiveIcon width={20} height={20} />
-                    </Button>
-                  </div>
                 </>
               )
             }

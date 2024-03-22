@@ -1,7 +1,6 @@
 import { RouteComponentProps } from "wouter";
 import { ArchiveIcon, DotFilledIcon, PlusIcon } from "@radix-ui/react-icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { addMovieToRadarr } from "$lib/apis/radarr/radarrApi";
+import { useQuery } from "@tanstack/react-query";
 import {
   getTmdbMovie,
   getTmdbMovieRecommendations,
@@ -19,6 +18,7 @@ import PersonCard from "$components/PersonCard";
 import OpenInButton from "$components/OpenInButton";
 import TitlePageLayout from "$components/TitlePageLayout";
 import QueryRenderer from "$components/QueryRenderer";
+import RadarrStatus from "$components/RadarrStatus";
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <div className="font-medium text-lg">{children}</div>
@@ -83,11 +83,6 @@ export default function Movie({
     },
   });
 
-  const $$addToRadarr = useMutation({
-    mutationFn: addMovieToRadarr,
-    onSuccess: () => $radarrMovie.refetch(),
-  });
-
   if (!movie) {
     return (
       <TitlePageLayout isModal={isModal} handleCloseModal={handleCloseModal} />
@@ -128,29 +123,27 @@ export default function Movie({
               loading={<div className="placeholder h-10 w-48 rounded-xl" />}
               success={(radarrMovie) => (
                 <>
+                  {!movie &&
+                  settingsStore.radarr.baseUrl &&
+                  settingsStore.radarr.apiKey ? (
+                    <Button type="primary" onClick={() => openRequestModal()}>
+                      <span>Add to Radarr</span>
+                      <PlusIcon width={20} height={20} />
+                    </Button>
+                  ) : radarrMovie ? (
+                    <div
+                      className="rounded-xl overflow-hidden flex stretch-items"
+                      style={{ height: 40 }}
+                    >
+                      <RadarrStatus size="lg" tmdbId={tmdbId} />
+                    </div>
+                  ) : null}
                   <OpenInButton
                     title={movie?.title}
                     radarrMovie={radarrMovie}
                     type="movie"
                     tmdbId={tmdbId}
                   />
-                  {!movie &&
-                  settingsStore.radarr.baseUrl &&
-                  settingsStore.radarr.apiKey ? (
-                    <Button
-                      type="primary"
-                      disabled={$$addToRadarr.isPending}
-                      onClick={() => $$addToRadarr.mutate(tmdbId)}
-                    >
-                      <span>Add to Radarr</span>
-                      <PlusIcon width={20} height={20} />
-                    </Button>
-                  ) : radarrMovie ? (
-                    <Button type="primary" onClick={openRequestModal}>
-                      <span className="mr-2">Request Movie</span>
-                      <PlusIcon width={20} height={20} />
-                    </Button>
-                  ) : null}
                 </>
               )}
             />

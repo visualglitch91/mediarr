@@ -4,16 +4,17 @@ import { StarIcon } from "@radix-ui/react-icons";
 import { TitleType } from "$lib/types";
 import useTitleModal from "$lib/useTitleModal";
 import LazyImg from "$components/LazyImg";
-import ProgressBar from "$components/ProgressBar";
 import Slot, { Slots } from "$components/Slot";
+import RadarrStatus from "$components/RadarrStatus";
+import SonarrStatus from "$components/SonarrrStatus";
 
 export default function Poster({
   openInModal = true,
   type = "movie",
   title = "",
   subtitle = "",
-  progress = 0,
-  shadow = false,
+  hideStatus,
+  shadow,
   size = "md",
   orientation = "landscape",
   backdropUrl,
@@ -28,13 +29,13 @@ export default function Poster({
   tvdbId?: number;
   title?: string;
   subtitle?: string;
-  progress?: number;
+  hideStatus?: boolean;
   shadow?: boolean;
   rating?: number;
   size?: "dynamic" | "md" | "lg" | "sm";
   orientation?: "portrait" | "landscape";
   backdropUrl: string;
-  slots?: Slots<"topLeft" | "topRight" | "bottomRight">;
+  slots?: Slots<"topLeft" | "topRight" | "bottomRight" | "footer">;
 }) {
   const openTitleModal = useTitleModal();
 
@@ -117,9 +118,13 @@ export default function Poster({
         </div>
       </div>
 
-      {progress > 0 && (
-        <div className="absolute bottom-2 lg:bottom-3 inset-x-2 lg:inset-x-3 bg-gradient-to-t ease-in-out z-[1]">
-          <ProgressBar value={progress} />
+      {!hideStatus && (
+        <div className="absolute bottom-0 w-full">
+          {type === "movie" && tmdbId ? (
+            <RadarrStatus tmdbId={tmdbId} />
+          ) : type === "series" ? (
+            <SonarrStatus identifier={{ tvdbId, title }} />
+          ) : null}
         </div>
       )}
     </button>

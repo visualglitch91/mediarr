@@ -275,7 +275,7 @@ export const getSonarrHealth = async (
         "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
       },
     })
-    .then((res) => res.statusCode === 200)
+    .then((res) => res.status === 200)
     .catch(() => false);
 
 export const getSonarrRootFolders = async (
@@ -283,15 +283,12 @@ export const getSonarrRootFolders = async (
   apiKey: string | undefined = undefined
 ) =>
   ky
-    .get<components["schemas"]["RootFolderResource"][]>(
-      (baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/rootFolder",
-      {
-        headers: {
-          "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
-        },
-      }
-    )
-    .json()
+    .get((baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/rootFolder", {
+      headers: {
+        "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
+      },
+    })
+    .json<components["schemas"]["RootFolderResource"][]>()
     .then((res) => res || []);
 
 export const getSonarrQualityProfiles = async (
@@ -299,15 +296,12 @@ export const getSonarrQualityProfiles = async (
   apiKey: string | undefined = undefined
 ) =>
   ky
-    .get<components["schemas"]["QualityProfileResource"][]>(
-      (baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/qualityprofile",
-      {
-        headers: {
-          "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
-        },
-      }
-    )
-    .json()
+    .get((baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/qualityprofile", {
+      headers: {
+        "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
+      },
+    })
+    .json<components["schemas"]["QualityProfileResource"][]>()
     .then((res) => res || []);
 
 export const getSonarrLanguageProfiles = async (
@@ -315,7 +309,7 @@ export const getSonarrLanguageProfiles = async (
   apiKey: string | undefined = undefined
 ) =>
   ky
-    .get<components["schemas"]["LanguageProfileResource"][]>(
+    .get(
       (baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/languageprofile",
       {
         headers: {
@@ -323,7 +317,7 @@ export const getSonarrLanguageProfiles = async (
         },
       }
     )
-    .json()
+    .json<components["schemas"]["LanguageProfileResource"][]>()
     .then((res) => res || []);
 
 export function getSonarrPosterUrl(item: SonarrSeries, original = false) {

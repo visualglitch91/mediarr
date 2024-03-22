@@ -1,7 +1,7 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { RadarrMovie, getRadarrMovies } from "./apis/radarr/radarrApi";
 
-export default function useRadarrMovies<K>(
+export default function useRadarrMovies<K = RadarrMovie[]>(
   options?: Omit<UseQueryOptions<RadarrMovie[], any, K>, "queryKey" | "queryFn">
 ) {
   return useQuery({

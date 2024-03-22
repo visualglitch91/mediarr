@@ -8,6 +8,7 @@ import Movie from "$pages/Movie";
 import Series from "$pages/Series";
 import Genre from "$pages/Genre";
 import Network from "$pages/Network";
+import Movies from "$pages/Movies";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/series/:tmdbId" component={Series} />
             <Route path="/genre/:genre" component={Genre} />
             <Route path="/network/:network" component={Network} />
+            <Route path="/movies" component={Movies} />
           </Switch>
         </div>
       </ModalProvider>

@@ -201,7 +201,7 @@ export const getRadarrHealth = async (
         "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
       },
     })
-    .then((res) => res.statusCode === 200)
+    .then((res) => res.status === 200)
     .catch(() => false);
 
 export const getRadarrRootFolders = async (
@@ -209,15 +209,12 @@ export const getRadarrRootFolders = async (
   apiKey: string | undefined = undefined
 ) =>
   ky
-    .get<components["schemas"]["RootFolderResource"][]>(
-      (baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/rootFolder",
-      {
-        headers: {
-          "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
-        },
-      }
-    )
-    .json()
+    .get((baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/rootFolder", {
+      headers: {
+        "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
+      },
+    })
+    .json<components["schemas"]["RootFolderResource"][]>()
     .then((res) => res || []);
 
 export const getRadarrQualityProfiles = async (
@@ -225,15 +222,12 @@ export const getRadarrQualityProfiles = async (
   apiKey: string | undefined = undefined
 ) =>
   ky
-    .get<components["schemas"]["QualityProfileResource"][]>(
-      (baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/qualityprofile",
-      {
-        headers: {
-          "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
-        },
-      }
-    )
-    .json()
+    .get((baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/qualityprofile", {
+      headers: {
+        "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
+      },
+    })
+    .json<components["schemas"]["QualityProfileResource"][]>()
     .then((res) => res || []);
 
 export function getRadarrPosterUrl(item: RadarrMovie, original = false) {

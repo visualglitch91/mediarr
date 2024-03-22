@@ -171,6 +171,7 @@ export default function Person({
             <>
               {person?.homepage && (
                 <>
+                  {/* @ts-expect-error */}
                   <a href={person?.homepage} target="_blank">
                     Homepage
                   </a>

@@ -11,6 +11,8 @@ import IconButton from "$components/IconButton";
 import LazyImg from "$components/LazyImg";
 import TruncatedText from "$components/TruncatedText";
 import useResizeObserver from "use-resize-observer";
+import RadarrStatus from "$components/RadarrStatus";
+import SonarrStatus from "$components/SonarrrStatus";
 
 const body = document.body;
 
@@ -32,6 +34,7 @@ export default function TitlePageLayout({
   handleCloseModal?: () => void;
   titleInformation?: {
     tmdbId: number;
+    tvdbId?: number;
     type: TitleType;
     title: string;
     tagline: string;
