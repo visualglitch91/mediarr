@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { capitalize, times } from "lodash";
 import { RouteComponentProps } from "wouter";
 import classNames from "classnames";
 import {
@@ -15,6 +17,9 @@ import {
 } from "$lib/apis/tmdb/tmdbApi";
 import { formatMinutesToTime, formatSize, notEmpty } from "$lib/utils";
 import { TMDB_BACKDROP_SMALL } from "$lib/constants";
+import useSonarrSeries from "$lib/useSonarrSeries";
+import useSonarrDownload from "$lib/useSonarrDownload";
+import getSettings from "$lib/settings";
 import Button from "$components/Button";
 import Card from "$components/Card";
 import { fetchCardTmdbProps } from "$components/Card/utils";
@@ -24,12 +29,7 @@ import EpisodeCard from "$components/EpisodeCard";
 import PersonCard from "$components/PersonCard";
 import OpenInButton from "$components/OpenInButton";
 import TitlePageLayout from "$components/TitlePageLayout";
-import settingsStore from "$lib/settings";
-import { capitalize, times } from "lodash";
 import QueryRenderer from "$components/QueryRenderer";
-import useSonarrSeries from "$lib/useSonarrSeries";
-import useSonarrDownload from "$lib/useSonarrDownload";
-import { useState } from "react";
 import SonarrStatus from "$components/SonarrrStatus";
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
@@ -39,6 +39,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 export default function Series({
   params: { tmdbId: tmdbIdString },
 }: RouteComponentProps<{ tmdbId: string }>) {
+  const settings = getSettings();
   const tmdbId = parseInt(tmdbIdString);
 
   const $series = useQuery({
@@ -157,8 +158,8 @@ export default function Series({
             ) : (
               <>
                 {!$sonarrSeries.data &&
-                settingsStore.sonarr.apiKey &&
-                settingsStore.sonarr.baseUrl ? (
+                settings.sonarr.api_key &&
+                settings.sonarr.base_url ? (
                   <Button type="primary" onClick={openRequestModal}>
                     <span>Add to Sonarr</span>
                     <PlusIcon width={20} height={20} />

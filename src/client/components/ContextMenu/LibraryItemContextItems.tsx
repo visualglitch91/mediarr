@@ -1,6 +1,6 @@
 import type { RadarrMovie } from "$lib/apis/radarr/radarrApi";
 import type { SonarrSeries } from "$lib/apis/sonarr/sonarrApi";
-import settingsStore from "$lib/settings";
+import getSettings from "$lib/settings";
 import type { TitleType } from "$lib/types";
 import ContextMenuItem from "./ContextMenuItem";
 
@@ -15,6 +15,8 @@ export default function LibraryItemContextItems({
   type?: TitleType;
   tmdbId?: number;
 }) {
+  const settings = getSettings();
+
   return (
     <>
       {type === "movie" ? (
@@ -22,7 +24,7 @@ export default function LibraryItemContextItems({
           disabled={!radarrMovie}
           onClick={() =>
             window.open(
-              settingsStore.radarr.baseUrl + "/movie/" + radarrMovie?.tmdbId
+              settings.radarr.real_base_url + "/movie/" + radarrMovie?.tmdbId
             )
           }
         >
@@ -33,7 +35,7 @@ export default function LibraryItemContextItems({
           disabled={!sonarrSeries}
           onClick={() =>
             window.open(
-              settingsStore.sonarr.baseUrl +
+              settings.sonarr.real_base_url +
                 "/series/" +
                 sonarrSeries?.titleSlug
             )

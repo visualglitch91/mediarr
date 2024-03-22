@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { TmdbApiOpen, getPosterProps } from "$lib/apis/tmdb/tmdbApi";
 import { genres, networks } from "$lib/discover";
 import { formatDateToYearMonthDay } from "$lib/utils";
-import settingsStore from "$lib/settings";
 import { TitleType } from "$lib/types";
+import getSettings from "$lib/settings";
 import Carousel, { CarouselPlaceholderItems } from "$components/Carousel";
 import GenreCard from "$components/GenreCard";
 import NetworkCard from "$components/NetworkCard";
@@ -40,6 +40,8 @@ const Title = ({ children }: { children: string }) => (
 );
 
 export default function Discovery() {
+  const settings = getSettings();
+
   const $trendingActor = useQuery({
     queryKey: ["trending__person", { path: { time_window: "week" } }] as const,
     queryFn: ({ queryKey: [, params] }) => {
@@ -54,10 +56,10 @@ export default function Discovery() {
         query: {
           "primary_release_date.gte": formatDateToYearMonthDay(new Date()),
           sort_by: "popularity.desc",
-          language: settingsStore.language,
-          region: settingsStore.discover.region,
+          language: settings.language,
+          region: settings.discover.region,
           with_original_language: parseIncludedLanguages(
-            settingsStore.discover.includedLanguages
+            settings.discover.includedLanguages
           ),
         },
       },
@@ -74,9 +76,9 @@ export default function Discovery() {
         query: {
           "first_air_date.gte": formatDateToYearMonthDay(new Date()),
           sort_by: "popularity.desc",
-          language: settingsStore.language,
+          language: settings.language,
           with_original_language: parseIncludedLanguages(
-            settingsStore.discover.includedLanguages
+            settings.discover.includedLanguages
           ),
           append_to_response: "external_ids",
         },
@@ -95,9 +97,9 @@ export default function Discovery() {
           with_release_type: 4,
           sort_by: "popularity.desc",
           "release_date.lte": formatDateToYearMonthDay(new Date()),
-          language: settingsStore.language,
+          language: settings.language,
           with_original_language: parseIncludedLanguages(
-            settingsStore.discover.includedLanguages
+            settings.discover.includedLanguages
           ),
         },
       },
@@ -115,9 +117,9 @@ export default function Discovery() {
           "air_date.gte": formatDateToYearMonthDay(new Date()),
           "first_air_date.lte": formatDateToYearMonthDay(new Date()),
           sort_by: "popularity.desc",
-          language: settingsStore.language,
+          language: settings.language,
           with_original_language: parseIncludedLanguages(
-            settingsStore.discover.includedLanguages
+            settings.discover.includedLanguages
           ),
           append_to_response: "external_ids",
         },

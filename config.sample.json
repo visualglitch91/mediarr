@@ -1,0 +1,23 @@
+{
+  "port": 5723,
+  "language": "",
+  "discover": {
+    "region": "",
+    "includedLanguages": "",
+    "excludeLibraryItems": false
+  },
+  "radarr": {
+    "base_url": "",
+    "api_key": "",
+    "root_folder_path": "/movies",
+    "quality_profile_id": 1,
+    "profile_id": 1
+  },
+  "sonarr": {
+    "base_url": "",
+    "api_key": "",
+    "root_folder_path": "/tvshows",
+    "quality_profile_id": 1,
+    "language_profile_id": 1
+  }
+}

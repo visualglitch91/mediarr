@@ -1,5 +1,5 @@
 import { RouteComponentProps } from "wouter";
-import { ArchiveIcon, DotFilledIcon, PlusIcon } from "@radix-ui/react-icons";
+import { DotFilledIcon, PlusIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import {
   getTmdbMovie,
@@ -7,7 +7,7 @@ import {
   getTmdbMovieSimilar,
 } from "$lib/apis/tmdb/tmdbApi";
 import { formatMinutesToTime, formatSize, notEmpty } from "$lib/utils";
-import settingsStore from "$lib/settings";
+import getSettings from "$lib/settings";
 import useRadarrMovie from "$lib/useRadarrMovie";
 import useRadarrDownload from "$lib/useRadarrDownload";
 import Button from "$components/Button";
@@ -27,6 +27,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 export default function Movie({
   params: { tmdbId: tmdbIdString },
 }: RouteComponentProps<{ tmdbId: string }>) {
+  const settings = getSettings();
   const tmdbId = parseInt(tmdbIdString);
   const tmdbUrl = "https://www.themoviedb.org/movie/" + tmdbId;
 
@@ -115,8 +116,8 @@ export default function Movie({
               success={(radarrMovie) => (
                 <>
                   {!movie &&
-                  settingsStore.radarr.baseUrl &&
-                  settingsStore.radarr.apiKey ? (
+                  settings.radarr.base_url &&
+                  settings.radarr.api_key ? (
                     <Button type="primary" onClick={() => openRequestModal()}>
                       <span>Add to Radarr</span>
                       <PlusIcon width={20} height={20} />

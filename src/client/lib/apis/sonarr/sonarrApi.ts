@@ -3,7 +3,7 @@ import createClient from "openapi-fetch";
 import type { components, paths } from "$lib/apis/sonarr/sonarr.generated";
 import { log } from "$lib/utils";
 import { getTmdbSeries } from "../tmdb/tmdbApi";
-import settingsStore from "$lib/settings";
+import getSettings from "$lib/settings";
 
 export type SonarrSeries = components["schemas"]["SeriesResource"];
 export type SonarrReleaseResource = components["schemas"]["ReleaseResource"];
@@ -40,11 +40,13 @@ export interface SonarrSeriesOptions {
 }
 
 function getSonarrApi() {
-  const baseUrl = settingsStore.sonarr.baseUrl;
-  const apiKey = settingsStore.sonarr.apiKey;
-  const rootFolder = settingsStore.sonarr.rootFolderPath;
-  const qualityProfileId = settingsStore.sonarr.qualityProfileId;
-  const languageProfileId = settingsStore.sonarr.languageProfileId;
+  const settings = getSettings();
+
+  const baseUrl = settings.sonarr.base_url;
+  const apiKey = settings.sonarr.api_key;
+  const rootFolder = settings.sonarr.root_folder_path;
+  const qualityProfileId = settings.sonarr.quality_profile_id;
+  const languageProfileId = settings.sonarr.language_profile_id;
 
   if (
     !baseUrl ||
@@ -57,17 +59,13 @@ function getSonarrApi() {
 
   return createClient<paths>({
     baseUrl,
-    headers: {
-      "X-Api-Key": apiKey,
-    },
+    headers: { "X-Api-Key": apiKey },
   });
 }
 
 export const getSonarrSeries = (): Promise<SonarrSeries[]> =>
   getSonarrApi()
-    ?.GET("/api/v3/series", {
-      params: {},
-    })
+    ?.GET("/api/v3/series", { params: {} })
     .then((r) => r.data || []) || Promise.resolve([]);
 
 export const getSonarrSeriesByTvdbId = (
@@ -91,6 +89,7 @@ export const getDiskSpace = (): Promise<DiskSpaceInfo[]> =>
 
 export const addSeriesToSonarr = async (tmdbId: number) => {
   const tmdbSeries = await getTmdbSeries(tmdbId);
+  const settings = getSettings();
 
   if (!tmdbSeries || !tmdbSeries.external_ids.tvdb_id || !tmdbSeries.name)
     throw new Error("Movie not found");
@@ -98,15 +97,15 @@ export const addSeriesToSonarr = async (tmdbId: number) => {
   const options: SonarrSeriesOptions = {
     title: tmdbSeries.name,
     tvdbId: tmdbSeries.external_ids.tvdb_id,
-    qualityProfileId: settingsStore.sonarr.qualityProfileId || 0,
+    qualityProfileId: settings.sonarr.quality_profile_id || 0,
     monitored: false,
     addOptions: {
       monitor: "none",
       searchForMissingEpisodes: false,
       searchForCutoffUnmetEpisodes: false,
     },
-    rootFolderPath: settingsStore.sonarr.rootFolderPath || "",
-    languageProfileId: settingsStore.sonarr.languageProfileId || 0,
+    rootFolderPath: settings.sonarr.root_folder_path || "",
+    languageProfileId: settings.sonarr.language_profile_id || 0,
     seasonFolder: true,
   };
 
@@ -268,61 +267,72 @@ export const fetchSonarrEpisodes = async (
 export const getSonarrHealth = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
-) =>
-  ky
-    .get((baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/health", {
+) => {
+  const settings = getSettings();
+
+  return ky
+    .get((baseUrl || settings.sonarr.base_url) + "/api/v3/health", {
       headers: {
-        "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
+        "X-Api-Key": apiKey || settings.sonarr.api_key,
       },
     })
     .then((res) => res.status === 200)
     .catch(() => false);
+};
 
 export const getSonarrRootFolders = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
-) =>
-  ky
-    .get((baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/rootFolder", {
+) => {
+  const settings = getSettings();
+
+  return ky
+    .get((baseUrl || settings.sonarr.base_url) + "/api/v3/rootFolder", {
       headers: {
-        "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
+        "X-Api-Key": apiKey || settings.sonarr.api_key,
       },
     })
     .json<components["schemas"]["RootFolderResource"][]>()
     .then((res) => res || []);
+};
 
 export const getSonarrQualityProfiles = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
-) =>
-  ky
-    .get((baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/qualityprofile", {
+) => {
+  const settings = getSettings();
+
+  return ky
+    .get((baseUrl || settings.sonarr.base_url) + "/api/v3/qualityprofile", {
       headers: {
-        "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
+        "X-Api-Key": apiKey || settings.sonarr.api_key,
       },
     })
     .json<components["schemas"]["QualityProfileResource"][]>()
     .then((res) => res || []);
+};
 
 export const getSonarrLanguageProfiles = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
-) =>
-  ky
-    .get(
-      (baseUrl || settingsStore.sonarr.baseUrl) + "/api/v3/languageprofile",
-      {
-        headers: {
-          "X-Api-Key": apiKey || settingsStore.sonarr.apiKey,
-        },
-      }
-    )
+) => {
+  const settings = getSettings();
+
+  return ky
+    .get((baseUrl || settings.sonarr.base_url) + "/api/v3/languageprofile", {
+      headers: {
+        "X-Api-Key": apiKey || settings.sonarr.api_key,
+      },
+    })
     .json<components["schemas"]["LanguageProfileResource"][]>()
     .then((res) => res || []);
+};
 
 export function getSonarrPosterUrl(item: SonarrSeries, original = false) {
+  const settings = getSettings();
+
   const url =
-    settingsStore.sonarr.baseUrl +
+    settings.sonarr.base_url +
     (item.images?.find((i) => i.coverType === "poster")?.url || "");
 
   if (!original) return url.replace("poster.jpg", `poster-${500}.jpg`);

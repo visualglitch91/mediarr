@@ -2,8 +2,8 @@ import ky from "ky";
 import createClient from "openapi-fetch";
 import type { components, paths } from "$lib/apis/radarr/radarr.generated";
 import { getTmdbMovie } from "$lib/apis/tmdb/tmdbApi";
-import settingsStore from "$lib/settings";
 import { log } from "$lib/utils";
+import getSettings from "$lib/settings";
 
 export type RadarrMovie = components["schemas"]["MovieResource"];
 export type MovieFileResource = components["schemas"]["MovieFileResource"];
@@ -28,18 +28,18 @@ export interface RadarrMovieOptions {
 }
 
 function getRadarrApi() {
-  const baseUrl = settingsStore.radarr.baseUrl;
-  const apiKey = settingsStore.radarr.apiKey;
-  const rootFolder = settingsStore.radarr.rootFolderPath;
-  const qualityProfileId = settingsStore.radarr.qualityProfileId;
+  const settings = getSettings();
+
+  const baseUrl = settings.radarr.base_url;
+  const apiKey = settings.radarr.api_key;
+  const rootFolder = settings.radarr.root_folder_path;
+  const qualityProfileId = settings.radarr.quality_profile_id;
 
   if (!baseUrl || !apiKey || !rootFolder || !qualityProfileId) return undefined;
 
   return createClient<paths>({
     baseUrl,
-    headers: {
-      "X-Api-Key": apiKey,
-    },
+    headers: { "X-Api-Key": apiKey },
   });
 }
 
@@ -65,15 +65,16 @@ export const getRadarrMovieByTmdbId = (
 export const addMovieToRadarr = async (tmdbId: number) => {
   const tmdbMovie = await getTmdbMovie(tmdbId);
   const radarrMovie = await lookupRadarrMovieByTmdbId(tmdbId);
+  const settings = getSettings();
 
   if (radarrMovie?.id) throw new Error("Movie already exists");
 
   if (!tmdbMovie) throw new Error("Movie not found");
 
   const options: RadarrMovieOptions = {
-    qualityProfileId: settingsStore.radarr.qualityProfileId || 0,
-    profileId: settingsStore.radarr.profileId || 0,
-    rootFolderPath: settingsStore.radarr.rootFolderPath || "",
+    qualityProfileId: settings.radarr.qualityProfileId || 0,
+    profileId: settings.radarr.profileId || 0,
+    rootFolderPath: settings.radarr.rootFolderPath || "",
     minimumAvailability: "announced",
     title: tmdbMovie.title || tmdbMovie.original_title || "",
     tmdbId: tmdbMovie.id || 0,
@@ -194,45 +195,56 @@ export const removeFromRadarr = (id: number) =>
 export const getRadarrHealth = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
-) =>
-  ky
-    .get((baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/health", {
+) => {
+  const settings = getSettings();
+
+  return ky
+    .get((baseUrl || settings.radarr.base_url) + "/api/v3/health", {
       headers: {
-        "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
+        "X-Api-Key": apiKey || settings.radarr.api_key,
       },
     })
     .then((res) => res.status === 200)
     .catch(() => false);
+};
 
 export const getRadarrRootFolders = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
-) =>
-  ky
-    .get((baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/rootFolder", {
+) => {
+  const settings = getSettings();
+
+  return ky
+    .get((baseUrl || settings.radarr.base_url) + "/api/v3/rootFolder", {
       headers: {
-        "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
+        "X-Api-Key": apiKey || settings.radarr.api_key,
       },
     })
     .json<components["schemas"]["RootFolderResource"][]>()
     .then((res) => res || []);
+};
 
 export const getRadarrQualityProfiles = async (
   baseUrl: string | undefined = undefined,
   apiKey: string | undefined = undefined
-) =>
-  ky
-    .get((baseUrl || settingsStore.radarr.baseUrl) + "/api/v3/qualityprofile", {
+) => {
+  const settings = getSettings();
+
+  return ky
+    .get((baseUrl || settings.radarr.base_url) + "/api/v3/qualityprofile", {
       headers: {
-        "X-Api-Key": apiKey || settingsStore.radarr.apiKey,
+        "X-Api-Key": apiKey || settings.radarr.api_key,
       },
     })
     .json<components["schemas"]["QualityProfileResource"][]>()
     .then((res) => res || []);
+};
 
 export function getRadarrPosterUrl(item: RadarrMovie, original = false) {
+  const settings = getSettings();
+
   const url =
-    settingsStore.radarr.baseUrl +
+    settings.radarr.base_url +
     (item.images?.find((i) => i.coverType === "poster")?.url || "");
 
   if (!original) return url.replace("poster.jpg", `poster-${500}.jpg`);

@@ -1,24 +1,23 @@
-const settingsStore = {
-  language: "",
-  discover: {
-    region: "",
-    includedLanguages: "",
-    excludeLibraryItems: false,
-  },
-  radarr: {
-    baseUrl: "/api/radarr",
-    apiKey: "noop",
-    rootFolderPath: "/movies",
-    qualityProfileId: 1,
-    profileId: 1,
-  },
-  sonarr: {
-    baseUrl: "/api/sonarr",
-    apiKey: "noop",
-    rootFolderPath: "/tvshows",
-    qualityProfileId: 1,
-    languageProfileId: 1,
-  },
-};
+import config from "../../../config.sample.json";
 
-export default settingsStore;
+type ServerConfig = typeof config;
+
+interface ClientSettings extends ServerConfig {
+  radarr: ServerConfig["radarr"] & { real_base_url: string };
+  sonarr: ServerConfig["sonarr"] & { real_base_url: string };
+}
+
+let settingsStore: ClientSettings | null = null;
+
+export async function fetchSettings() {
+  const response = await fetch("/api/settings");
+  settingsStore = await response.json();
+}
+
+export default function getSettings() {
+  if (!settingsStore) {
+    throw new Error("Settings not loaded");
+  }
+
+  return settingsStore;
+}
