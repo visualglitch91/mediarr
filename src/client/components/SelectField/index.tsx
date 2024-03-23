@@ -15,7 +15,7 @@ export default function SelectField<T extends string>({
         {label}
       </label>
       <select
-        className="block w-full px-4 py-2 border border-zinc-700 rounded-md focus-within:border-amber-400 hover:border-amber-400 bg-transparent text-white"
+        className="block w-full px-4 py-2 border border-zinc-700 rounded-md focus-within:border-rose-400 hover:border-rose-400 bg-transparent text-white"
         value={value}
         onChange={(e) => onChange(e.currentTarget.value as T)}
       >

@@ -32,7 +32,7 @@ export default function Button({
     {
       "bg-white text-zinc-900 font-extrabold backdrop-blur-lg rounded-xl":
         type === "primary",
-      "hover:bg-amber-400 focus-within:bg-amber-400 hover:border-amber-400 focus-within:border-amber-400":
+      "hover:bg-rose-400 focus-within:bg-rose-400 hover:border-rose-400 focus-within:border-rose-400":
         type === "primary" && !disabled,
       "text-zinc-200 bg-zinc-600 bg-opacity-20 backdrop-blur-lg rounded-xl":
         type === "secondary",

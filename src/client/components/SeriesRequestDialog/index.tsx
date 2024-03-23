@@ -8,18 +8,18 @@ import {
   getSonarrQualityProfiles,
   getSonarrRootFolders,
 } from "$lib/apis/sonarr/sonarrApi";
-import DialogBase from "$components/DialogBase";
+import DialogBase, { DialogBaseControlProps } from "$components/DialogBase";
 import Button from "$components/Button";
 import SelectField from "$components/SelectField";
 
 export default function SeriesRequestDialog({
   series,
   requestRefetch,
-  onClose,
+  controlProps,
 }: {
   series: { name: string; tmdbId: number };
   requestRefetch: () => Promise<any>;
-  onClose: () => void;
+  controlProps?: DialogBaseControlProps;
 }) {
   const settings = getSettings();
 
@@ -61,7 +61,7 @@ export default function SeriesRequestDialog({
       monitor: form.monitor,
     })
       .then(() => requestRefetch())
-      .then(() => onClose());
+      .then(() => controlProps?.onClose?.());
   };
 
   if (!$config.data) {
@@ -71,7 +71,7 @@ export default function SeriesRequestDialog({
   return (
     <DialogBase
       title={series.name}
-      onClose={onClose}
+      controlProps={controlProps}
       slots={{ footer: <Button onClick={onUpdate}>Add TV Show</Button> }}
     >
       <div className="flex flex-col gap-4">

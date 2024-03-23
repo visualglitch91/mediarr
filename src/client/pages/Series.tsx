@@ -105,11 +105,11 @@ export default function Series({
   const [visibleSeasonNumber, setVisibleSeasonNumber] = useState(1);
 
   async function openRequestModal() {
-    mount((_, unmount) => (
+    mount((controlProps) => (
       <SeriesRequestDialog
         series={{ tmdbId, name: tmdbSeries.name! }}
         requestRefetch={() => $sonarrSeries.refetch()}
-        onClose={unmount}
+        controlProps={controlProps}
       />
     ));
   }
@@ -161,7 +161,7 @@ export default function Series({
           </>
         ),
         titleRight: (
-          <div className="flex gap-2 items-center flex-row-reverse justify-end lg:flex-row lg:justify-start">
+          <div className="flex gap-2 items-center justify-start lg:flex-row">
             {$sonarrSeries.isLoading ? (
               <div className="placeholder h-10 w-48 rounded-xl" />
             ) : (

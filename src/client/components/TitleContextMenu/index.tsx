@@ -36,12 +36,12 @@ export default function TitleContextMenu({
             {(radarrMovie || sonarrSeries) && (
               <ContextMenuItem
                 onClick={() =>
-                  mount((_, unmount) => (
+                  mount((controlProps) => (
                     <UnmonitorDialog
                       radarrMovie={radarrMovie}
                       sonarrSeries={sonarrSeries}
                       requestRefetch={requestRefetch}
-                      onClose={unmount}
+                      controlProps={controlProps}
                     />
                   ))
                 }

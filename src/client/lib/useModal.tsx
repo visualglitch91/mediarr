@@ -1,14 +1,9 @@
 import { createContext, useContext, useState } from "react";
+import { DialogBaseControlProps } from "$components/DialogBase";
 import useMountEffect from "./useMountEffect";
 
 type Renderer = (
-  dialogProps: {
-    open: boolean;
-    onClose: () => void;
-    TransitionProps: {
-      onExited: () => void;
-    };
-  },
+  controlProps: DialogBaseControlProps,
   unmount: () => void
 ) => React.ReactNode;
 
@@ -50,18 +45,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         }, 500);
       });
 
-      return (
-        <>
-          {renderer(
-            {
-              open,
-              onClose,
-              TransitionProps: { onExited: unmount },
-            },
-            unmount
-          )}
-        </>
-      );
+      return <>{renderer({ open, onClose, onExited: unmount }, unmount)}</>;
     }
 
     setModals((prev) => {

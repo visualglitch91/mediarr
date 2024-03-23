@@ -9,7 +9,6 @@ import GenreCard from "$components/GenreCard";
 import NetworkCard from "$components/NetworkCard";
 import PersonCard from "$components/PersonCard";
 import Poster from "$components/Poster";
-import TitleShowcase from "$components/TitleShowcase";
 import QueryRenderer from "$components/QueryRenderer";
 
 const PADDING = "px-4 lg:px-8 2xl:px-16";
@@ -132,8 +131,6 @@ export default function Discovery() {
 
   return (
     <div className="pt-24">
-      <TitleShowcase />
-
       <div className="flex flex-col gap-12 py-6 bg-stone-950">
         <Carousel
           scrollClassName={PADDING}

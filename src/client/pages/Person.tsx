@@ -11,8 +11,6 @@ const GENDER_OPTIONS = ["Not set", "Female", "Male", "Non-binary"] as const;
 
 export default function Person({
   params: { tmdbId },
-  isModal = false,
-  handleCloseModal = () => {},
 }: {
   isModal?: boolean;
   handleCloseModal?: () => void;

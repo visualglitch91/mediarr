@@ -8,14 +8,14 @@ import {
 } from "@radix-ui/react-icons";
 import useMountEffect from "$lib/useMountEffect";
 import useModal from "$lib/useModal";
+import getSettings from "$lib/settings";
 import IconButton from "$components/IconButton";
 import LinkAnchor from "$components/LinkAnchor";
 import SearchDialog from "$components/SearchDialog";
 
-const appTitle = "Mediarr";
-
 export default function NavBar() {
   const mount = useModal();
+  const { appTitle } = getSettings();
   const [y, setY] = useState(0);
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
   const pathname = window.location.pathname;
@@ -45,7 +45,7 @@ export default function NavBar() {
   }, [pathname]);
 
   const openSearchModal = () => {
-    mount((_, unmount) => <SearchDialog onClose={unmount} />);
+    mount((controlProps) => <SearchDialog controlProps={controlProps} />);
   };
 
   const transparent = y <= 0;
@@ -61,10 +61,10 @@ export default function NavBar() {
   );
 
   function getLinkStyle(path: string) {
-    return classNames("selectable rounded-sm px-2 -mx-2 sm:text-base text-xl", {
-      "text-amber-200": pathname === path,
-      "hover:text-zinc-50 cursor-pointer": pathname !== path,
-    });
+    return classNames(
+      "selectable rounded-sm px-2 -mx-2 sm:text-base text-xl hover:text-rose-400",
+      { "text-rose-500": pathname === path }
+    );
   }
 
   const links = (
@@ -83,40 +83,45 @@ export default function NavBar() {
 
   return (
     <>
-      <div className={classNames(baseStyle, "hidden sm:grid")}>
-        <LinkAnchor
-          href="/"
-          className="hidden sm:flex gap-2 items-center hover:text-inherit selectable rounded-sm px-2 -mx-2"
-        >
-          <div className="rounded-full bg-rose-500 h-4 w-4" />
-          <h1 className="font-display uppercase font-semibold tracking-wider text-xl">
-            {appTitle}
-          </h1>
-        </LinkAnchor>
-        <div className="flex items-center justify-center gap-4 md:gap-8 font-normal text-sm tracking-wider text-zinc-200">
-          {links}
-        </div>
-        <div className="flex items-center justify-center gap-4 md:gap-8 font-normal text-sm tracking-wider text-zinc-200">
-          <a
-            role="button"
-            className={classNames(getLinkStyle(""), "flex items-center gap-2")}
-            onClick={(e) => {
-              e.preventDefault();
-              openSearchModal();
-            }}
+      <div className={classNames(baseStyle, "hidden sm:flex")}>
+        <div className="relative w-full" style={{ marginTop: -28 }}>
+          <LinkAnchor
+            href="/"
+            className="absolute left-0 flex gap-2 items-center hover:text-inherit selectable rounded-sm px-2 -mx-2"
           >
-            Search
-            <MagnifyingGlassIcon width={20} height={20} />
-          </a>
+            <div className="rounded-full bg-rose-500 h-4 w-4" />
+            <h1 className="font-display uppercase font-semibold tracking-wider text-xl">
+              {appTitle}
+            </h1>
+          </LinkAnchor>
+          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center gap-4 md:gap-8 font-normal text-sm tracking-wider text-zinc-200">
+            {links}
+          </div>
+          <div className=" absolute right-0 flex items-center justify-center gap-4 md:gap-8 font-normal text-sm tracking-wider text-zinc-200">
+            <a
+              role="button"
+              className={classNames(
+                getLinkStyle(""),
+                "flex items-center gap-2"
+              )}
+              onClick={(e) => {
+                e.preventDefault();
+                openSearchModal();
+              }}
+            >
+              Search
+              <MagnifyingGlassIcon width={20} height={20} />
+            </a>
+          </div>
         </div>
       </div>
 
-      <div className={classNames(baseStyle, " grid sm:hidden")}>
+      <div className={classNames(baseStyle, "grid sm:hidden")}>
         <LinkAnchor
           href="/"
           className="flex gap-2 items-center hover:text-inherit selectable rounded-sm px-2 -mx-2"
         >
-          <div className="rounded-full bg-amber-300 h-4 w-4" />
+          <div className="rounded-full bg-rose-500 h-4 w-4" />
           <h1 className="font-display uppercase font-semibold tracking-wider text-xl">
             {appTitle}
           </h1>

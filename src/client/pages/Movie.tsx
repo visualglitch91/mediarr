@@ -83,11 +83,11 @@ export default function Movie({
   }
 
   const openRequestModal = () => {
-    mount((_, unmount) => (
+    mount((controlProps) => (
       <MovieRequestDialog
         movie={{ tmdbId, title: movie.title! }}
         requestRefetch={() => $radarrMovie.refetch()}
-        onClose={unmount}
+        controlProps={controlProps}
       />
     ));
   };
@@ -118,7 +118,7 @@ export default function Movie({
         ),
         episodesCarousel: <></>,
         titleRight: (
-          <div className="flex gap-2 items-center flex-row-reverse justify-end lg:flex-row lg:justify-start">
+          <div className="flex gap-2 items-center justify-start lg:flex-row">
             <QueryRenderer
               query={$radarrMovie}
               loading={<div className="placeholder h-10 w-48 rounded-xl" />}

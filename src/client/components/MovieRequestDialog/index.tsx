@@ -6,18 +6,18 @@ import {
   getRadarrQualityProfiles,
   getRadarrRootFolders,
 } from "$lib/apis/radarr/radarrApi";
-import DialogBase from "$components/DialogBase";
+import DialogBase, { DialogBaseControlProps } from "$components/DialogBase";
 import Button from "$components/Button";
 import SelectField from "$components/SelectField";
 
 export default function MovieRequestDialog({
   movie,
   requestRefetch,
-  onClose,
+  controlProps,
 }: {
   movie: { title: string; tmdbId: number };
   requestRefetch: () => Promise<any>;
-  onClose: () => void;
+  controlProps: DialogBaseControlProps;
 }) {
   const settings = getSettings();
 
@@ -52,7 +52,7 @@ export default function MovieRequestDialog({
       qualityProfileId: Number(form.qualityProfileId),
     })
       .then(() => requestRefetch())
-      .then(() => onClose());
+      .then(() => controlProps?.onClose?.());
   };
 
   if (!$config.data) {
@@ -62,7 +62,7 @@ export default function MovieRequestDialog({
   return (
     <DialogBase
       title={movie.title}
-      onClose={onClose}
+      controlProps={controlProps}
       slots={{ footer: <Button onClick={onUpdate}>Add Movie</Button> }}
     >
       <div className="flex flex-col gap-4">

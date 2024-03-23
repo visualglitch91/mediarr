@@ -1,6 +1,7 @@
 {
   "port": 5723,
   "language": "",
+  "appTitle": "mediarr",
   "discover": {
     "region": "",
     "includedLanguages": "",

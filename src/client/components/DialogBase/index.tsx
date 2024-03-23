@@ -1,9 +1,19 @@
+import classNames from "classnames";
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeftIcon, Cross2Icon } from "@radix-ui/react-icons";
+import { useOnClickOutside } from "$lib/useOnClickOutside";
+import useLatestRef from "$lib/useLatestRef";
 import Slot, { Slots } from "$components/Slot";
 import IconButton from "$components/IconButton";
-import { useState } from "react";
-import { useOnClickOutside } from "$lib/useOnClickOutside";
-import classNames from "classnames";
+
+export interface DialogBaseControlProps {
+  open?: boolean;
+  onClose?: () => void;
+  onExited?: () => void;
+}
+
+const TRANSITION_DURATION = 100;
+const docEl = document.documentElement;
 
 export default function DialogBase({
   title,
@@ -11,7 +21,7 @@ export default function DialogBase({
   children,
   disablePadding,
   onBack,
-  onClose,
+  controlProps: { open = false, onClose = () => {}, onExited = () => {} } = {},
 }: {
   title?: string;
   slots?: Slots<"header" | "footer">;
@@ -19,20 +29,40 @@ export default function DialogBase({
   footer?: React.ReactNode;
   disablePadding?: boolean;
   onBack?: () => void;
-  onClose: () => void;
+  controlProps?: DialogBaseControlProps;
 }) {
+  const exitedTimeoutRef = useRef(0);
+  const onExitedRef = useLatestRef(onExited);
   const [dialogEl, setDialogEl] = useState<HTMLDivElement | null>(null);
 
   useOnClickOutside(dialogEl, onClose);
 
+  useEffect(() => {
+    window.clearTimeout(exitedTimeoutRef.current);
+
+    if (open) {
+      const { scrollLeft, scrollTop } = docEl;
+      const onScroll = () => docEl.scrollTo(scrollLeft, scrollTop);
+      window.addEventListener("scroll", onScroll);
+      return () => window.removeEventListener("scroll", onScroll);
+    } else {
+      exitedTimeoutRef.current = window.setTimeout(() => {
+        onExitedRef.current();
+      }, TRANSITION_DURATION);
+    }
+  }, [open, onExitedRef]);
+
   return (
-    <>
-      <div className="fixed inset-0 bg-stone-950 bg-opacity-80 z-20" />
-      <div
-        className={
-          "fixed inset-0 justify-center items-center z-20 overflow-hidden flex transition-opacity reltaive"
-        }
-      >
+    <div
+      className="fixed w-full h-full"
+      style={{
+        zIndex: 100,
+        opacity: open ? 1 : 0,
+        transition: `opacity ${TRANSITION_DURATION}ms linear`,
+      }}
+    >
+      <div className="absolute w-full h-full inset-0 bg-stone-950 bg-opacity-80" />
+      <div className="inset-0 justify-center items-center z-20 overflow-hidden flex reltaive">
         <div
           ref={setDialogEl}
           data-modal="true"
@@ -73,6 +103,6 @@ export default function DialogBase({
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

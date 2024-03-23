@@ -1,18 +1,18 @@
 import { removeFromRadarr } from "$lib/apis/radarr/radarrApi";
 import { removeFromSonarr } from "$lib/apis/sonarr/sonarrApi";
-import DialogBase from "$components/DialogBase";
+import DialogBase, { DialogBaseControlProps } from "$components/DialogBase";
 import Button from "$components/Button";
 
 export default function UnmonitorDialog({
   radarrMovie,
   sonarrSeries,
   requestRefetch,
-  onClose,
+  controlProps,
 }: {
   radarrMovie?: { id?: number; title?: string | null };
   sonarrSeries?: { id?: number; name?: string | null };
   requestRefetch: () => Promise<any>;
-  onClose: () => void;
+  controlProps?: DialogBaseControlProps;
 }) {
   if (!radarrMovie && !sonarrSeries) {
     throw new Error("Either radarrMovie or sonarrSeries must be provided");
@@ -28,13 +28,13 @@ export default function UnmonitorDialog({
       : Promise.resolve()
     )
       .then(() => requestRefetch())
-      .then(() => onClose());
+      .then(() => controlProps?.onClose?.());
   };
 
   return (
     <DialogBase
       title={`Unmonitor ${title}`}
-      onClose={onClose}
+      controlProps={controlProps}
       slots={{ footer: <Button onClick={onConfirm}>Continue</Button> }}
     >
       Are you sure you want to unmonitor {title}? All files will be deleted.

@@ -1,13 +1,13 @@
+import { take } from "lodash";
 import { useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import type { TmdbMovie2, TmdbSeries2 } from "$lib/apis/tmdb/tmdbApi";
 import { searchTmdbTitles } from "$lib/apis/tmdb/tmdbApi";
 import { TMDB_POSTER_SMALL } from "$lib/constants";
-import DialogBase from "$components/DialogBase";
-import { take } from "lodash";
 import useDelayedValue from "$lib/useDelayedValue";
 import useMountEffect from "$lib/useMountEffect";
+import DialogBase, { DialogBaseControlProps } from "$components/DialogBase";
 
 function DialogMessage({ children }: { children: React.ReactNode }) {
   return (
@@ -17,7 +17,11 @@ function DialogMessage({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function SearchDialog({ onClose }: { onClose: () => void }) {
+export default function SearchDialog({
+  controlProps,
+}: {
+  controlProps?: DialogBaseControlProps;
+}) {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeoutRef = useRef(0);
@@ -55,6 +59,7 @@ export default function SearchDialog({ onClose }: { onClose: () => void }) {
 
   return (
     <DialogBase
+      controlProps={controlProps}
       disablePadding
       slots={{
         header: (
@@ -85,7 +90,6 @@ export default function SearchDialog({ onClose }: { onClose: () => void }) {
           </>
         ),
       }}
-      onClose={onClose}
     >
       <>
         {inputValue === "" ? (
@@ -103,7 +107,7 @@ export default function SearchDialog({ onClose }: { onClose: () => void }) {
                 <a
                   className="flex px-4 py-2 gap-4 hover:bg-lighten focus-visible:bg-lighten cursor-pointer outline-none"
                   href={`/${result.type}/${result.tmdbId}`}
-                  onClick={onClose}
+                  onClick={controlProps?.onClose}
                 >
                   <div
                     style={{

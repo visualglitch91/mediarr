@@ -3,10 +3,10 @@ import { createRoot } from "react-dom/client";
 import { fetchSettings } from "$lib/settings.ts";
 import App from "./App.tsx";
 
-await fetchSettings();
-
-createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+fetchSettings().then(() => {
+  createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+});
