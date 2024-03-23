@@ -29,3 +29,7 @@ a {
 .selectable-explicit {
   @apply focus-within:outline outline-2 outline-[#f0cd6dc2] outline-offset-2;
 }
+
+body:has([data-modal="true"]) {
+  overflow: hidden;
+}

@@ -10,6 +10,7 @@ import { formatMinutesToTime, formatSize, notEmpty } from "$lib/utils";
 import getSettings from "$lib/settings";
 import useRadarrMovie from "$lib/useRadarrMovie";
 import useRadarrDownload from "$lib/useRadarrDownload";
+import useModal from "$lib/useModal";
 import Button from "$components/Button";
 import Card from "$components/Card";
 import { fetchCardTmdbProps } from "$components/Card/utils";
@@ -19,6 +20,7 @@ import OpenInButton from "$components/OpenInButton";
 import TitlePageLayout from "$components/TitlePageLayout";
 import QueryRenderer from "$components/QueryRenderer";
 import RadarrStatus from "$components/RadarrStatus";
+import MovieRequestDialog from "$components/MovieRequestDialog";
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <div className="font-medium text-lg">{children}</div>
@@ -27,13 +29,10 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 export default function Movie({
   params: { tmdbId: tmdbIdString },
 }: RouteComponentProps<{ tmdbId: string }>) {
+  const mount = useModal();
   const settings = getSettings();
   const tmdbId = parseInt(tmdbIdString);
   const tmdbUrl = "https://www.themoviedb.org/movie/" + tmdbId;
-
-  function openRequestModal() {
-    console.log("open request modal");
-  }
 
   const $movie = useQuery({
     queryKey: ["movie", tmdbId] as const,
@@ -83,6 +82,16 @@ export default function Movie({
     return <TitlePageLayout />;
   }
 
+  const openRequestModal = () => {
+    mount((_, unmount) => (
+      <MovieRequestDialog
+        movie={{ tmdbId, title: movie.title! }}
+        requestRefetch={() => $radarrMovie.refetch()}
+        onClose={unmount}
+      />
+    ));
+  };
+
   return (
     <TitlePageLayout
       titleInformation={{
@@ -115,7 +124,7 @@ export default function Movie({
               loading={<div className="placeholder h-10 w-48 rounded-xl" />}
               success={(radarrMovie) => (
                 <>
-                  {!movie &&
+                  {!radarrMovie &&
                   settings.radarr.base_url &&
                   settings.radarr.api_key ? (
                     <Button type="primary" onClick={() => openRequestModal()}>

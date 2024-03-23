@@ -62,33 +62,41 @@ export const getRadarrMovieByTmdbId = (
     .then((r) => r.data?.find((m) => (m.tmdbId as any) == tmdbId)) ||
   Promise.resolve(undefined);
 
-export const addMovieToRadarr = async (tmdbId: number) => {
+export const addMovieToRadarr = async ({
+  tmdbId,
+  qualityProfileId,
+  rootFolderPath,
+}: {
+  tmdbId: number;
+  qualityProfileId: number;
+  rootFolderPath: string;
+}) => {
   const tmdbMovie = await getTmdbMovie(tmdbId);
   const radarrMovie = await lookupRadarrMovieByTmdbId(tmdbId);
-  const settings = getSettings();
 
-  if (radarrMovie?.id) throw new Error("Movie already exists");
+  if (radarrMovie?.id) {
+    return;
+  }
 
-  if (!tmdbMovie) throw new Error("Movie not found");
-
-  const options: RadarrMovieOptions = {
-    qualityProfileId: settings.radarr.qualityProfileId || 0,
-    profileId: settings.radarr.profileId || 0,
-    rootFolderPath: settings.radarr.rootFolderPath || "",
-    minimumAvailability: "announced",
-    title: tmdbMovie.title || tmdbMovie.original_title || "",
-    tmdbId: tmdbMovie.id || 0,
-    year: Number(tmdbMovie.release_date?.slice(0, 4)),
-    monitored: true,
-    tags: [],
-    searchNow: true,
-  };
+  if (!tmdbMovie) {
+    throw new Error("Movie not found");
+  }
 
   return (
     getRadarrApi()
       ?.POST("/api/v3/movie", {
         params: {},
-        body: options,
+        body: {
+          qualityProfileId: qualityProfileId,
+          rootFolderPath: rootFolderPath,
+          minimumAvailability: "announced",
+          title: tmdbMovie.title || tmdbMovie.original_title || "",
+          tmdbId: tmdbMovie.id || 0,
+          year: Number(tmdbMovie.release_date?.slice(0, 4)),
+          monitored: true,
+          tags: [],
+          addOptions: { monitor: "movieOnly", searchForMovie: true },
+        },
       })
       .then((r) => r.data) || Promise.resolve(undefined)
   );

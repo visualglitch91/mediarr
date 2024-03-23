@@ -20,7 +20,7 @@ export function createAPIProxy(
       const response = await ky(requestURL.toString(), {
         method: req.method,
         headers: { "content-type": req.headers["content-type"], ...headers },
-        ...(isEmpty(req.body) ? {} : { body: req.body }),
+        ...(isEmpty(req.body) ? {} : { json: req.body }),
       });
 
       const blob = await response.blob();

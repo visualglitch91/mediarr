@@ -12,7 +12,13 @@ import Movies from "$pages/Movies";
 import AllSeries from "$pages/AllSeries";
 import { useEffect } from "react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function App() {
   const [location] = useLocation();

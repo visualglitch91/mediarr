@@ -55,6 +55,7 @@ export default function SearchDialog({ onClose }: { onClose: () => void }) {
 
   return (
     <DialogBase
+      disablePadding
       slots={{
         header: (
           <>

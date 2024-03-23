@@ -3,17 +3,21 @@ import Slot, { Slots } from "$components/Slot";
 import IconButton from "$components/IconButton";
 import { useState } from "react";
 import { useOnClickOutside } from "$lib/useOnClickOutside";
+import classNames from "classnames";
 
 export default function DialogBase({
   title,
   slots,
   children,
+  disablePadding,
   onBack,
   onClose,
 }: {
   title?: string;
-  slots?: Slots<"header">;
+  slots?: Slots<"header" | "footer">;
   children?: React.ReactNode;
+  footer?: React.ReactNode;
+  disablePadding?: boolean;
   onBack?: () => void;
   onClose: () => void;
 }) {
@@ -31,6 +35,7 @@ export default function DialogBase({
       >
         <div
           ref={setDialogEl}
+          data-modal="true"
           className="max-w-3xl self-start mt-[10vh] bg-[#33333388] backdrop-blur-xl rounded overflow-hidden flex flex-col flex-1 mx-4 sm:mx-16 lg:mx-24 drop-shadow-xl"
         >
           <div className="flex text-zinc-200 items-center p-3 px-5 gap-4 border-b border-zinc-700">
@@ -48,11 +53,24 @@ export default function DialogBase({
               )}
               <h1 className="font-medium">{title}</h1>
             </Slot>
-            <IconButton onClick={onClose}>
-              <Cross2Icon width={20} height={20} />
-            </IconButton>
+            <div className="ml-auto">
+              <IconButton onClick={onClose}>
+                <Cross2Icon width={20} height={20} />
+              </IconButton>
+            </div>
           </div>
-          {children}
+          <div
+            className={classNames("flex-1 overflow-auto", {
+              "py-6 px-5": !disablePadding,
+            })}
+          >
+            {children}
+          </div>
+          {slots?.footer && (
+            <div className="p-3 border-t border-zinc-700 flex justify-end items-center gap-4">
+              {slots.footer}
+            </div>
+          )}
         </div>
       </div>
     </>
