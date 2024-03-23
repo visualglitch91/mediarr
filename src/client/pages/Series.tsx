@@ -20,6 +20,7 @@ import { TMDB_BACKDROP_SMALL } from "$lib/constants";
 import useSonarrSeries from "$lib/useSonarrSeries";
 import useSonarrDownload from "$lib/useSonarrDownload";
 import getSettings from "$lib/settings";
+import useModal from "$lib/useModal";
 import Button from "$components/Button";
 import Card from "$components/Card";
 import { fetchCardTmdbProps } from "$components/Card/utils";
@@ -31,6 +32,7 @@ import OpenInButton from "$components/OpenInButton";
 import TitlePageLayout from "$components/TitlePageLayout";
 import QueryRenderer from "$components/QueryRenderer";
 import SonarrStatus from "$components/SonarrrStatus";
+import SeriesRequestDialog from "$components/SeriesRequestDialog";
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
   <div className="font-medium text-lg">{children}</div>
@@ -39,6 +41,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 export default function Series({
   params: { tmdbId: tmdbIdString },
 }: RouteComponentProps<{ tmdbId: string }>) {
+  const mount = useModal();
   const settings = getSettings();
   const tmdbId = parseInt(tmdbIdString);
 
@@ -102,7 +105,13 @@ export default function Series({
   const [visibleSeasonNumber, setVisibleSeasonNumber] = useState(1);
 
   async function openRequestModal() {
-    console.log("open request modal");
+    mount((_, unmount) => (
+      <SeriesRequestDialog
+        series={{ tmdbId, name: tmdbSeries.name! }}
+        requestRefetch={() => $sonarrSeries.refetch()}
+        onClose={unmount}
+      />
+    ));
   }
 
   if (!$series.data || !$seasons.data) {

@@ -87,9 +87,33 @@ export const getDiskSpace = (): Promise<DiskSpaceInfo[]> =>
     ?.GET("/api/v3/diskspace", {})
     .then((d) => d.data || []) || Promise.resolve([]);
 
-export const addSeriesToSonarr = async (tmdbId: number) => {
+export type SeriesMonitorType =
+  | "unknown"
+  | "all"
+  | "future"
+  | "missing"
+  | "existing"
+  | "firstSeason"
+  | "latestSeason"
+  | "pilot"
+  | "monitorSpecials"
+  | "unmonitorSpecials"
+  | "none";
+
+export const addSeriesToSonarr = async ({
+  tmdbId,
+  qualityProfileId,
+  rootFolderPath,
+  languageProfileId,
+  monitor,
+}: {
+  tmdbId: number;
+  qualityProfileId: number;
+  rootFolderPath: string;
+  languageProfileId: number;
+  monitor: SeriesMonitorType;
+}) => {
   const tmdbSeries = await getTmdbSeries(tmdbId);
-  const settings = getSettings();
 
   if (!tmdbSeries || !tmdbSeries.external_ids.tvdb_id || !tmdbSeries.name)
     throw new Error("Movie not found");
@@ -97,15 +121,15 @@ export const addSeriesToSonarr = async (tmdbId: number) => {
   const options: SonarrSeriesOptions = {
     title: tmdbSeries.name,
     tvdbId: tmdbSeries.external_ids.tvdb_id,
-    qualityProfileId: settings.sonarr.quality_profile_id || 0,
-    monitored: false,
+    qualityProfileId: qualityProfileId,
+    monitored: true,
     addOptions: {
-      monitor: "none",
-      searchForMissingEpisodes: false,
+      monitor,
+      searchForMissingEpisodes: true,
       searchForCutoffUnmetEpisodes: false,
     },
-    rootFolderPath: settings.sonarr.root_folder_path || "",
-    languageProfileId: settings.sonarr.language_profile_id || 0,
+    rootFolderPath: rootFolderPath,
+    languageProfileId: languageProfileId,
     seasonFolder: true,
   };
 
