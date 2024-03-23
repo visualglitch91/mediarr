@@ -28,7 +28,7 @@ import Carousel, { CarouselPlaceholderItems } from "$components/Carousel";
 import UICarousel from "$components/UICarousel";
 import EpisodeCard from "$components/EpisodeCard";
 import PersonCard from "$components/PersonCard";
-import OpenInButton from "$components/OpenInButton";
+import TitleContextMenu from "$components/TitleContextMenu";
 import TitlePageLayout from "$components/TitlePageLayout";
 import QueryRenderer from "$components/QueryRenderer";
 import SonarrStatus from "$components/SonarrrStatus";
@@ -181,11 +181,12 @@ export default function Series({
                     <SonarrStatus size="lg" identifier={{ tvdbId }} />
                   </div>
                 ) : null}
-                <OpenInButton
+                <TitleContextMenu
                   title={tmdbSeries.name}
                   sonarrSeries={$sonarrSeries.data}
                   type="series"
                   tmdbId={tmdbId}
+                  requestRefetch={() => $sonarrSeries.refetch()}
                 />
               </>
             )}

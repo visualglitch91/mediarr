@@ -16,7 +16,7 @@ import Card from "$components/Card";
 import { fetchCardTmdbProps } from "$components/Card/utils";
 import Carousel, { CarouselPlaceholderItems } from "$components/Carousel";
 import PersonCard from "$components/PersonCard";
-import OpenInButton from "$components/OpenInButton";
+import TitleContextMenu from "$components/TitleContextMenu";
 import TitlePageLayout from "$components/TitlePageLayout";
 import QueryRenderer from "$components/QueryRenderer";
 import RadarrStatus from "$components/RadarrStatus";
@@ -139,11 +139,12 @@ export default function Movie({
                       <RadarrStatus size="lg" tmdbId={tmdbId} />
                     </div>
                   ) : null}
-                  <OpenInButton
+                  <TitleContextMenu
                     title={movie?.title}
                     radarrMovie={radarrMovie}
                     type="movie"
                     tmdbId={tmdbId}
+                    requestRefetch={() => $radarrMovie.refetch()}
                   />
                 </>
               )}

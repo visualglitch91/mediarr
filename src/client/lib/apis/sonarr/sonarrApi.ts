@@ -207,9 +207,8 @@ export const removeFromSonarr = (id: number): Promise<boolean> =>
   getSonarrApi()
     ?.DELETE("/api/v3/series/{id}", {
       params: {
-        path: {
-          id,
-        },
+        path: { id },
+        query: { deleteFiles: true },
       },
     })
     .then((res) => res.response.ok) || Promise.resolve(false);

@@ -20,7 +20,11 @@ export default function SelectField<T extends string>({
         onChange={(e) => onChange(e.currentTarget.value as T)}
       >
         {options.map((option) => (
-          <option className="bg-[#333333]" value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+            className="bg-[#333333]"
+          >
             {option.label}
           </option>
         ))}

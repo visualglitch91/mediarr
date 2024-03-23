@@ -193,9 +193,8 @@ export const removeFromRadarr = (id: number) =>
   getRadarrApi()
     ?.DELETE("/api/v3/movie/{id}", {
       params: {
-        path: {
-          id,
-        },
+        path: { id },
+        query: { deleteFiles: true },
       },
     })
     .then((res) => res.response.ok) || Promise.resolve(false);
