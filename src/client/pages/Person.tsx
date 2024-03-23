@@ -1,14 +1,8 @@
 import { RouteComponentProps } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { DotFilledIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
+import { DotFilledIcon } from "@radix-ui/react-icons";
 import { TMDB_POSTER_SMALL } from "$lib/constants";
 import { getTmdbPerson } from "$lib/apis/tmdb/tmdbApi";
-import FacebookIcon from "$components/svgs/FacebookIcon";
-import ImdbIcon from "$components/svgs/ImdbIcon";
-import TiktokIcon from "$components/svgs/TiktokIcon";
-import TmdbIcon from "$components/svgs/TmdbIcon";
-import TwitterIcon from "$components/svgs/TwitterIcon";
-import YoutubeIcon from "$components/svgs/YoutubeIcon";
 import Carousel from "$components/Carousel";
 import Poster from "$components/Poster";
 import TitlePageLayout from "$components/TitlePageLayout";
@@ -27,56 +21,6 @@ export default function Person({
     queryKey: ["page__person", tmdbId] as const,
     queryFn: async ({ queryKey: [, tmdbId] }) => {
       const tmdbPerson = await getTmdbPerson(Number(tmdbId));
-
-      const tmdbSocials = [];
-
-      tmdbSocials.push({
-        url: `https://themoviedb.org/person/${tmdbPerson.id}`,
-        icon: TmdbIcon,
-      });
-
-      for (const [social, id] of Object.entries(tmdbPerson.external_ids)) {
-        if (id) {
-          switch (social) {
-            case "facebook_id":
-              tmdbSocials.push({
-                url: `https://facebook.com/${id}`,
-                icon: FacebookIcon,
-              });
-              break;
-            case "imdb_id":
-              tmdbSocials.push({
-                url: `https://imdb.com/name/${id}`,
-                icon: ImdbIcon,
-              });
-              break;
-            case "twitter_id":
-              tmdbSocials.push({
-                url: `https://x.com/${id}`,
-                icon: TwitterIcon,
-              });
-              break;
-            case "youtube_id":
-              tmdbSocials.push({
-                url: `https://youtube.com/@${id}`,
-                icon: YoutubeIcon,
-              });
-              break;
-            case "instagram_id":
-              tmdbSocials.push({
-                url: `https://instagram.com/${id}`,
-                icon: InstagramLogoIcon,
-              });
-              break;
-            case "tiktok_id":
-              tmdbSocials.push({
-                url: `https://www.tiktok.com/@${id}`,
-                icon: TiktokIcon,
-              });
-              break;
-          }
-        }
-      }
 
       const isDirector = tmdbPerson.known_for_department == "Directing";
 
@@ -128,7 +72,6 @@ export default function Person({
 
       return {
         tmdbPerson,
-        tmdbSocials,
         knownForProps,
         movieCredits,
         seriesCredits,
@@ -138,14 +81,11 @@ export default function Person({
   });
 
   if (!data) {
-    return (
-      <TitlePageLayout isModal={isModal} handleCloseModal={handleCloseModal} />
-    );
+    return <TitlePageLayout />;
   }
 
   const {
     tmdbPerson: person,
-    tmdbSocials,
     knownForProps,
     movieCredits,
     seriesCredits,
@@ -164,8 +104,6 @@ export default function Person({
           tagline: person?.known_for_department || person?.name || "",
           overview: person?.biography || "",
         }}
-        isModal={isModal}
-        handleCloseModal={handleCloseModal}
         slots={{
           titleInfo: (
             <>
@@ -185,20 +123,6 @@ export default function Person({
           ),
           infoComponents: (
             <>
-              {tmdbSocials.length > 0 && (
-                <div className="col-span-2 lg:col-span-1">
-                  <p className="text-zinc-400 text-sm">External Links</p>
-                  <h2 className="pt-2 text-sm">
-                    <div className="flex flex-wrap gap-2">
-                      {tmdbSocials.map(({ url, icon: Icon }) => (
-                        <a key={url} href={url} target="_blank">
-                          <Icon className="h-6 w-6 flex-shrink-0 text-white" />
-                        </a>
-                      ))}
-                    </div>
-                  </h2>
-                </div>
-              )}
               <div className="col-span-2 lg:col-span-1">
                 <p className="text-zinc-400 text-sm">Known for</p>
                 <h2 className="font-medium">{person?.known_for_department}</h2>
@@ -239,7 +163,6 @@ export default function Person({
                       key={props.tmdbId}
                       orientation="portrait"
                       {...props}
-                      openInModal={isModal}
                     />
                   ))}
                 </Carousel>
