@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import fs from "fs";
 import ViteExpress from "vite-express";
 import config from "../../config.json";
 import { createAPIProxy } from "./utils";
@@ -43,6 +44,20 @@ app.get("/api/settings", (_, res) => {
 });
 
 app.get("/api/trending/:provider", trendingTitlesByProvider);
+
+const webmanifest = fs.readFileSync(
+  __dirname + "/../../dist/manifest.webmanifest",
+  "utf-8"
+);
+
+app.get("/manifest.webmanifest", (_, res) => {
+  res.setHeader("content-type", "application/manifest+json");
+  res.send(webmanifest);
+});
+
+app.get("/index.html", (_, res) => {
+  res.redirect("/");
+});
 
 ViteExpress.listen(app, port, () =>
   console.log("Server is listening at port", port)
