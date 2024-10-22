@@ -393,9 +393,7 @@ export default function Series({
                     success={(download) =>
                       download ? (
                         <div className="col-span-2 lg:col-span-1">
-                          <p className="text-zinc-400 text-sm">
-                            Download Completed In
-                          </p>
+                          <p className="text-zinc-400 text-sm">Download ETA</p>
                           <h2 className="font-medium">
                             {download.estimatedCompletionTime
                               ? formatMinutesToTime(

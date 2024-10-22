@@ -6,6 +6,7 @@ import {
   HamburgerMenuIcon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
+import { Box } from "@mui/material";
 import useMountEffect from "$lib/useMountEffect";
 import useModal from "$lib/useModal";
 import getSettings from "$lib/settings";
@@ -49,8 +50,9 @@ export default function NavBar() {
   };
 
   const transparent = y <= 0;
+
   const baseStyle = classNames(
-    "fixed px-8 inset-x-0 grid-cols-[min-content_1fr_min-content] items-center z-10",
+    "px-8 inset-x-0 grid-cols-[min-content_1fr_min-content] items-center",
     "transition-all",
     {
       "bg-stone-900 bg-opacity-50 backdrop-blur-2xl":
@@ -82,9 +84,9 @@ export default function NavBar() {
   );
 
   return (
-    <>
+    <Box sx={{ position: "sticky", top: 0, zIndex: 10 }}>
       <div className={classNames(baseStyle, "hidden sm:flex")}>
-        <div className="relative w-full" style={{ marginTop: -28 }}>
+        <Box height={24} className="relative w-full">
           <LinkAnchor
             href="/"
             className="absolute left-0 flex gap-2 items-center hover:text-inherit selectable rounded-sm px-2 -mx-2"
@@ -113,7 +115,7 @@ export default function NavBar() {
               <MagnifyingGlassIcon width={20} height={20} />
             </a>
           </div>
-        </div>
+        </Box>
       </div>
 
       <div className={classNames(baseStyle, "grid sm:hidden")}>
@@ -151,6 +153,6 @@ export default function NavBar() {
           </div>
         </div>
       )}
-    </>
+    </Box>
   );
 }

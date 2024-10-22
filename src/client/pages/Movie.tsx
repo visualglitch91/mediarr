@@ -289,7 +289,7 @@ export default function Movie({
                 <Carousel
                   gradientFromColor="from-stone-950"
                   slots={{
-                    title: <SectionTitle>Similar Series</SectionTitle>,
+                    title: <SectionTitle>Similar Movies</SectionTitle>,
                   }}
                 >
                   <CarouselPlaceholderItems />
@@ -332,7 +332,7 @@ export default function Movie({
                     <Carousel
                       gradientFromColor="from-stone-950"
                       slots={{
-                        title: <SectionTitle>Similar Series</SectionTitle>,
+                        title: <SectionTitle>Similar Movies</SectionTitle>,
                       }}
                     >
                       {tmdbSimilarProps.map((props) => (

@@ -10,7 +10,6 @@ const colors = {
   downloading: "purple",
   unavailable: "red",
   unmonitored: "red",
-  unreleased: "red",
 } as const;
 
 const labels = {
@@ -20,7 +19,6 @@ const labels = {
   downloading: "Downloading",
   unavailable: "Unavailable",
   unmonitored: "Unmonitored",
-  unreleased: "Unreleased",
 };
 
 function getPercent(show: SonarrSeries) {
@@ -45,6 +43,7 @@ export default function SonarrStatus({
 }) {
   const { data: { tvdbId: possibleTVDBId } = {} } =
     useSonarrSeriesByTitle(title);
+
   const tvdbId = externalTVDBId || possibleTVDBId;
   const { data: sonarrMovie } = useSonarrSeries(tvdbId);
   const { data: sonarrDownload } = useSonarrDownload(tvdbId);
@@ -57,14 +56,12 @@ export default function SonarrStatus({
 
   const status = !sonarrMovie.path
     ? "unmonitored"
-    : sonarrDownload && (sonarrDownload.sizeleft || 0) < 0
+    : sonarrDownload && (sonarrDownload.sizeleft || 0) > 0
     ? "downloading"
     : percent === 100
     ? "available"
     : percent > 0
     ? "partially_available"
-    : percent < 0
-    ? "unreleased"
     : "unavailable";
 
   return (

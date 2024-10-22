@@ -55,7 +55,7 @@ export default function ContextMenu({
               </h2>
             )}
           </Slot>
-          <div className="flex flex-col gap-0.5" onClick={() => close()}>
+          <div className="flex flex-col gap-0.5" onClick={() => setOpen(false)}>
             <Slot slots={slots} name="menu" />
           </div>
         </div>

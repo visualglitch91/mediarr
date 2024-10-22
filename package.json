@@ -10,8 +10,9 @@
     "start": "NODE_ENV=production vite-node src/server/index.ts"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.4",
     "@popperjs/core": "^2.11.8",
     "@radix-ui/react-icons": "^1.3.0",
     "@tanstack/react-query": "^5.13.4",

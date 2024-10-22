@@ -12,7 +12,7 @@ export default function AllSeries() {
   useResizeObserver({ ref: document.body });
 
   return (
-    <div className="pt-24 p-8">
+    <div className="p-8">
       <div
         className="flex flex-wrap gap-x-4 gap-y-8 mx-auto"
         style={{ width: columns * POSTER_WIDTH_WITH_GAP }}

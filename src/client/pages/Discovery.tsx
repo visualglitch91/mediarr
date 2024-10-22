@@ -130,107 +130,105 @@ export default function Discovery() {
   });
 
   return (
-    <div className="pt-24">
-      <div className="flex flex-col gap-12 py-6 bg-stone-950">
-        <Carousel
-          scrollClassName={PADDING}
-          slots={{ title: <Title>Popular People</Title> }}
-        >
-          <QueryRenderer
-            query={$trendingActor}
-            loading={<CarouselPlaceholderItems />}
-            success={(res) =>
-              res.data?.results
-                ?.filter((a) => a.profile_path)
-                .map((actor) => ({
-                  tmdbId: actor.id || 0,
-                  backdropUri: actor.profile_path || "",
-                  name: actor.name || "",
-                  subtitle: actor.known_for_department || "",
-                }))
-                .map((props) => <PersonCard key={props.tmdbId} {...props} />)
-            }
-          />
-        </Carousel>
+    <div className="flex flex-col gap-12 py-6 bg-stone-950">
+      <Carousel
+        scrollClassName={PADDING}
+        slots={{ title: <Title>Popular People</Title> }}
+      >
+        <QueryRenderer
+          query={$trendingActor}
+          loading={<CarouselPlaceholderItems />}
+          success={(res) =>
+            res.data?.results
+              ?.filter((a) => a.profile_path)
+              .map((actor) => ({
+                tmdbId: actor.id || 0,
+                backdropUri: actor.profile_path || "",
+                name: actor.name || "",
+                subtitle: actor.known_for_department || "",
+              }))
+              .map((props) => <PersonCard key={props.tmdbId} {...props} />)
+          }
+        />
+      </Carousel>
 
-        <Carousel
-          scrollClassName={PADDING}
-          slots={{ title: <Title>Upcoming Movies</Title> }}
-        >
-          <QueryRenderer
-            query={$upcomingMovies}
-            loading={<CarouselPlaceholderItems />}
-            success={(res) => {
-              return parseCardProps(res?.data?.results || [], "movie").map(
-                (props) => <Poster key={props.tmdbId} {...props} />
-              );
-            }}
-          />
-        </Carousel>
+      <Carousel
+        scrollClassName={PADDING}
+        slots={{ title: <Title>Upcoming Movies</Title> }}
+      >
+        <QueryRenderer
+          query={$upcomingMovies}
+          loading={<CarouselPlaceholderItems />}
+          success={(res) => {
+            return parseCardProps(res?.data?.results || [], "movie").map(
+              (props) => <Poster key={props.tmdbId} {...props} />
+            );
+          }}
+        />
+      </Carousel>
 
-        <Carousel
-          scrollClassName={PADDING}
-          slots={{ title: <Title>Upcoming Series</Title> }}
-        >
-          <QueryRenderer
-            query={$upcomingSeries}
-            loading={<CarouselPlaceholderItems />}
-            success={(res) => {
-              return parseCardProps(res?.data?.results || [], "series").map(
-                (props) => <Poster key={props.tmdbId} {...props} />
-              );
-            }}
-          />
-        </Carousel>
+      <Carousel
+        scrollClassName={PADDING}
+        slots={{ title: <Title>Upcoming Series</Title> }}
+      >
+        <QueryRenderer
+          query={$upcomingSeries}
+          loading={<CarouselPlaceholderItems />}
+          success={(res) => {
+            return parseCardProps(res?.data?.results || [], "series").map(
+              (props) => <Poster key={props.tmdbId} {...props} />
+            );
+          }}
+        />
+      </Carousel>
 
-        <Carousel
-          scrollClassName={PADDING}
-          slots={{ title: <Title>Genres</Title> }}
-        >
-          {Object.values(genres).map((genre) => (
-            <GenreCard genre={genre} key={genre.key} />
-          ))}
-        </Carousel>
+      <Carousel
+        scrollClassName={PADDING}
+        slots={{ title: <Title>Genres</Title> }}
+      >
+        {Object.values(genres).map((genre) => (
+          <GenreCard genre={genre} key={genre.key} />
+        ))}
+      </Carousel>
 
-        <Carousel
-          scrollClassName={PADDING}
-          slots={{ title: <Title>New Digital Releases</Title> }}
-        >
-          <QueryRenderer
-            query={$digitalReleases}
-            loading={<CarouselPlaceholderItems />}
-            success={(res) => {
-              return parseCardProps(res?.data?.results || [], "movie").map(
-                (props) => <Poster key={props.tmdbId} {...props} />
-              );
-            }}
-          />
-        </Carousel>
+      <Carousel
+        scrollClassName={PADDING}
+        slots={{ title: <Title>New Digital Releases</Title> }}
+      >
+        <QueryRenderer
+          query={$digitalReleases}
+          loading={<CarouselPlaceholderItems />}
+          success={(res) => {
+            return parseCardProps(res?.data?.results || [], "movie").map(
+              (props) => <Poster key={props.tmdbId} {...props} />
+            );
+          }}
+        />
+      </Carousel>
 
-        <Carousel
-          scrollClassName={PADDING}
-          slots={{ title: <Title>Streaming Now</Title> }}
-        >
-          <QueryRenderer
-            query={$nowStreaming}
-            loading={<CarouselPlaceholderItems />}
-            success={(res) => {
-              return parseCardProps(res?.data?.results || [], "series").map(
-                (props) => <Poster key={props.tmdbId} {...props} />
-              );
-            }}
-          />
-        </Carousel>
+      <Carousel
+        scrollClassName={PADDING}
+        slots={{ title: <Title>Streaming Now</Title> }}
+      >
+        <QueryRenderer
+          query={$nowStreaming}
+          loading={<CarouselPlaceholderItems />}
+          success={(res) => {
+            return parseCardProps(res?.data?.results || [], "series").map(
+              (props) => <Poster key={props.tmdbId} {...props} />
+            );
+          }}
+        />
+      </Carousel>
 
-        <Carousel
-          scrollClassName={PADDING}
-          slots={{ title: <Title>Networks</Title> }}
-        >
-          {Object.values(networks).map((network) => (
-            <NetworkCard network={network} key={network.key} />
-          ))}
-        </Carousel>
-      </div>
+      <Carousel
+        scrollClassName={PADDING}
+        slots={{ title: <Title>Networks</Title> }}
+      >
+        {Object.values(networks).map((network) => (
+          <NetworkCard network={network} key={network.key} />
+        ))}
+      </Carousel>
     </div>
   );
 }

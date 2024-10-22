@@ -102,7 +102,7 @@ export default function SearchDialog({
           <DialogMessage>No results</DialogMessage>
         ) : (
           <div className="py-2">
-            {take($search.data, 7).map((result) => {
+            {take($search.data, 20).map((result) => {
               return (
                 <a
                   className="flex px-4 py-2 gap-4 hover:bg-lighten focus-visible:bg-lighten cursor-pointer outline-none"
